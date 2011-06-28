@@ -14,9 +14,6 @@ leaf = {}
 ----[[ Modules ]]----
 require 'leaf.console'
 require 'leaf.containers'
-require 'leaf.entity'
 require 'leaf.object'
-require 'leaf.packet'
 require 'leaf.timer'
-require 'leaf.ui'
 require 'leaf.vector'
