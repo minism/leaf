@@ -11,9 +11,9 @@ require 'math'
 leaf.Vector = leaf.Object:extend('Vector')
 local Vector = leaf.Vector
 
-function Vector:init()
-    self.x = 0
-    self.y = 0
+function Vector:init(x, y)
+    self.x = x or 0.0
+    self.y = y or 0.0
 end
 
 function Vector.__add(v1, v2)
@@ -32,6 +32,11 @@ end
 
 function Vector:len(self)
 	return sqrt(self.x * self.x, self.y * self.y)
+end
+
+function Vector:moveTo(x, y)
+	self.x = x
+	self.y = y
 end
 
 function Vector:clear()

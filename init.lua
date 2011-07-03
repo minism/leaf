@@ -7,7 +7,6 @@
 
 -- Usage: put the 'leaf' directory at the same level as your lua file and require 'leaf'
 
-
 -- Namespace
 leaf = {}
 
@@ -15,5 +14,5 @@ leaf = {}
 require 'leaf.console'
 require 'leaf.containers'
 require 'leaf.object'
-require 'leaf.timer'
+require 'leaf.time'
 require 'leaf.vector'

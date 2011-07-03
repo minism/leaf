@@ -41,5 +41,3 @@ function console.draw()
 		love.graphics.print(msg.str, 5, (num - 1) * spacing)
 	end
 end
-
-console.write('Console initialized')

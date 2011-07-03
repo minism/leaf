@@ -24,7 +24,7 @@ end
 function Object:extend(classname)
     local class = {}
     setmetatable(class, self)
-    self.__index = self
+    class.__index = class
     class._type = '<CLASS> ' .. classname
     class._class = classname or '<UNNAMED>'
     return class
