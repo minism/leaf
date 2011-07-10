@@ -1,3 +1,1 @@
-- make time timers list use an actual leaf.List
-- timers should be automatically culled if they are stopped, that should be delete method.
 - move camera to leaf, give it a generic x,y trackable 
