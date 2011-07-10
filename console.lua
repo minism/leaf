@@ -22,11 +22,19 @@ local console = leaf.console
 
 console.queue = leaf.Queue:new()
 
-function console.write(str)
+function console.write(...)
+	str = ''
+	for _, v in ipairs(arg) do
+		str = str .. v .. ' '
+	end
 	console.queue:push(Message:new(str, false))
 end
 
-function console.err(str)
+function console.err(...)
+	str = ''
+	for _, v in ipairs(arg) do
+		str = str .. v .. ' '
+	end
 	console.queue:push(Message:new(str, true))
 end
 
