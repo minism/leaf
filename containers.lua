@@ -42,7 +42,7 @@ end
 
 --- Remove an object from the list by table pointer comparison
 function List:remove(obj)
-    for item in self:iterNods() do
+    for item in self:iterNodes() do
         if obj == item.value then
             -- Check for edge cases first
             if item == self.head then

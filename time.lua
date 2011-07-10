@@ -12,12 +12,13 @@ require 'leaf.object'
 leaf.Timer = leaf.Object:extend('Timer')
 local Timer = leaf.Timer
 
-function Timer:init(duration, callback, loops, start)
+function Timer:init(duration, callback, loops)
 	self.duration = duration
 	self.callback = callback
 	self.loops = loops
 	self.timeleft = self.duration
 	self.running = false
+	self.stopped = false
 	-- Optionally start the timer if we passed start=true
 	if start then self:start() end
 end
@@ -27,9 +28,10 @@ function Timer:start()
 	self.timeleft = self.duration
 end
 
+-- Stops timer, also deleting it from the master list
 function Timer:stop()
 	self.running = false
-	self.timeleft = 0
+	self.stopped = true
 end
 
 function Timer:pause()
@@ -64,12 +66,16 @@ end
 leaf.time = leaf.Object:new()
 local time = leaf.time
 
-time.timers = {}
+time.timers = leaf.List:new()
 
 --- Update all timers, this must be called from main loop!
 function time.update(dt)
-	for _, timer in ipairs(time.timers) do
+	for timer in time.timers:iter() do
 		timer:update(dt)
+		if timer.stopped then
+			-- Remove timer from list
+			time.timers:remove(timer)
+		end
 	end
 end
 
@@ -77,7 +83,7 @@ end
 function time.timer(duration, callback, loops, start)
 	start = start or true
 	local timer = Timer:new(duration, callback, loops, start)
-	table.insert(time.timers, timer)
+	time.timers:insert(timer)
 	return timer
 end
 
