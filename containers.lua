@@ -97,7 +97,6 @@ local Queue = leaf.Queue
 function Queue:init()
     self.front = 0
     self.back = -1
-    self.history = 30
 end
 
 function Queue:push(val)
@@ -114,4 +113,8 @@ function Queue:pop()
     self[self.front] = nil
     self.front = self.front + 1
     return val
+end
+
+function Queue:isEmpty()
+	return self.back > self.front
 end
