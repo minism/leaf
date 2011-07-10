@@ -102,9 +102,6 @@ end
 function Queue:push(val)
     self.back = self.back + 1
     self[self.back] = val
-    if (self.back - self.front) > self.history then
-        self:pop()
-    end
 end
 
 function Queue:pop()

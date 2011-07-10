@@ -11,8 +11,10 @@
 leaf = {}
 
 ----[[ Modules ]]----
-require 'leaf.console'
-require 'leaf.containers'
 require 'leaf.object'
+require 'leaf.containers'
+require 'leaf.group'
+require 'leaf.console'
 require 'leaf.time'
 require 'leaf.vector'
+require 'leaf.camera'
