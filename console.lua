@@ -21,6 +21,7 @@ leaf.console = {}
 local console = leaf.console
 
 console.queue = leaf.Queue:new()
+console.queue.max = 35
 
 function console.write(...)
 	str = ''
