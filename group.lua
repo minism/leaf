@@ -5,38 +5,35 @@
 -- + minornine.com              +
 -- ++++++++++++++++++++++++++++++
 
-require 'leaf.object'
 require 'leaf.containers'
 
-leaf.Group = leaf.Object:extend('Group')
+leaf.Group = {}
 local Group = leaf.Group
 
-function Group:init()
-	-- Internal list to hold arbitrary objects
-	self.list = leaf.List:new()
+Group.mt = {}
+
+function Group.new()
+	-- Allocate
+	local grp = {}
 	
-	-- Override metatable
-	self._mt = {}
-	setmetatable(self, self._mt)
+	-- Initialize
+	grp.list = leaf.List:new()
+	grp.insert = function(obj) grp.list:insert(obj) end
+	grp.remove = function(obj) grp.list:remove(obj) end
 	
-	-- Override index metamethod to call list children instead if super class
-	self._mt.__index = function (table, key)
+	-- Setup an index metamethod that calls methods on children
+	local mt = {}
+	mt.__index = function (table, key)
 		-- Return a function which calls `key` on all children
 		local f = function(...)
-			for obj in self.list:iter() do
-				obj[key](unpack(arg))
+			for obj in table.list:iter() do
+				obj[key](obj, unpack(arg))
 			end
 		end
 		return f
 	end
-end
+	
+	setmetatable(grp, mt)
 
--- Wrapper methods around internal list
-function Group:insert(obj)
-	self.list:insert(obj)
+	return grp
 end
-
-function Group:remove(obj)
-	self.list:remove(obj)
-end
-
