@@ -10,8 +10,6 @@ require 'leaf.containers'
 leaf.Group = {}
 local Group = leaf.Group
 
-Group.mt = {}
-
 function Group.new()
 	-- Allocate
 	local grp = {}
