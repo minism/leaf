@@ -42,7 +42,7 @@ end
 
 --- Remove an object from the list by table pointer comparison
 function List:remove(obj)
-    for item in self:iterNodes() do
+    for item in self:_iterNodes() do
         if obj == item.value then
             -- Check for edge cases first
             if item == self.head then
@@ -82,11 +82,20 @@ function List:_iterNodes()
         if curr then
             temp = curr
             curr = curr.next
-            return temp.value
+            return temp
         else
             return nil
         end
     end
+end
+
+--- Return size of list
+function List:size()
+	local count = 0
+	for _ in self:iter() do
+		count = count + 1
+	end
+	return count
 end
 
 ----[[ Queue ]]----
