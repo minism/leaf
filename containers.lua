@@ -98,6 +98,20 @@ function List:size()
 	return count
 end
 
+----[[ Stack ]]----
+
+leaf.Stack = leaf.Object:extend('Stack')
+local Stack = leaf.Stack
+
+function Stack:push(obj)
+	table.insert(self, obj)
+end
+
+function Stack:pop()
+	return table.remove(self)
+end
+	
+
 ----[[ Queue ]]----
 
 leaf.Queue = leaf.Object:extend('Queue')
