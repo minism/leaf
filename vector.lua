@@ -30,11 +30,15 @@ function Vector.__mul(vec, scalar)
 	return result
 end
 
-function Vector:len(self)
-	return sqrt(self.x * self.x, self.y * self.y)
+function Vector:length()
+	return math.sqrt(self.x * self.x, self.y * self.y)
 end
 
 function Vector:clear()
 	self.x = 0
 	self.y = 0
 end
+
+
+---- Shortcuts ----
+Vector.len = Vector.length
