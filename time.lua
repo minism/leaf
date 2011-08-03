@@ -73,7 +73,7 @@ end
 -- vary depending on its curve function
 
 leaf.Interpolator = Timer:extend('Interp')
-local Interpolator = leaf.Interp
+local Interpolator = leaf.Interpolator
 
 function Interpolator:update(dt)
 	if self.running then
