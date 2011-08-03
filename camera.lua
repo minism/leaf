@@ -7,7 +7,7 @@
 
 require 'leaf.object'
 require 'leaf.vector'
-require 'leaf.timer'
+require 'leaf.time'
 
 leaf.camera = leaf.Object:new()
 local camera = leaf.camera
@@ -17,7 +17,7 @@ camera.zoom_speed 	= 1.15
 camera.zoom_min 	= 0.2
 camera.zoom_max 	= 5.0
 
-camera.position		= leaf.Vector:new()
+camera.pos			= leaf.Vector:new()
 
 -- This must be overrided to the tracking target vector object you want!
 camera.target		= leaf.Vector:new()
@@ -27,11 +27,17 @@ function camera.track(target)
 	camera.target = target
 end
 
+--- Apply the cameras settings to the transformation stack
+function camera.apply()
+	love.graphics.translate(-camera.pos.x / camera.zoom, -camera.pos.y / camera.zoom)
+	love.graphics.scale(1.0 / camera.zoom,1.0 / camera.zoom)
+end
+
 --- Must be called in main loop
 function camera.update(dt)
 	-- Center camera position on target table's x and y fields
-	camera.position.x = target.x - love.graphics.getWidth() * camera.zoom / 2.0
-	camera.position.y = target.y - love.graphics.getHeight() * camera.zoom / 2.0
+	camera.pos.x = camera.target.x - love.graphics.getWidth() * camera.zoom / 2.0
+	camera.pos.y = camera.target.y - love.graphics.getHeight() * camera.zoom / 2.0
 end
 
 function camera.zoomIn()
