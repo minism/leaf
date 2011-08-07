@@ -17,6 +17,9 @@ function Rect:init(left, top, bottom, right)
 	self.right = right or 0
 end
 
+function Rect:getWidth()	return self.right - self.left 	end
+function Rect:getHeight()	return self.bottom - self.top	end
+
 function Rect:contains(arg1, arg2)
 	if arg2 == nil then
 		-- Assume arg1 is an object with x and y fields
