@@ -110,6 +110,10 @@ end
 function Stack:pop()
 	return table.remove(self)
 end
+
+function Stack:isEmpty()
+	return table.getn(self) == 0
+end
 	
 
 ----[[ Queue ]]----
