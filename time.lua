@@ -66,21 +66,21 @@ function Timer:update(dt)
 end
 
 
-----[[ Interpolator class ]]----
+----[[ Interpolator classes ]]----
 
--- Interpolators which execute every tick, passing
+-- Abstract Interpolators which execute every tick, passing
 -- an ALPHA argument to its bound callback, which may
 -- vary depending on its curve function
 
-leaf.Interpolator = Timer:extend('Interp')
-local Interpolator = leaf.Interpolator
+leaf.AbsInterp = Timer:extend('AbsInterp')
+local AbsInterp = leaf.AbsInterp
 
-function Interpolator:update(dt)
+function AbsInterp:update(dt)
 	if self.running then
 		self.timeleft = self.timeleft - dt
 		if self.timeleft < 0.0 then
 			-- Call callback with maximum (1.0)
-			self.callback(1)
+			self:trigger(1.0)
 			-- Check how many loops remaining, loop infinitely if set to < 0
             self.loops = self.loops - 1
 			if self.loops == 0 then self.stop() end
@@ -88,13 +88,33 @@ function Interpolator:update(dt)
 		else
 			local alpha = 1.0 - self.timeleft / self.duration
 			-- Call callback with alpha
-			self.callback(alpha)
+			self:trigger(alpha)
 		end
 		return false
 	end
 	return false
 end
 
+function AbsInterp:trigger(alpha)
+    self.callback(alpha)
+end
+
+-- Standard interpolator will directly change a specific table value
+
+leaf.Interp = AbsInterp:extend('Interp')
+local Interp = leaf.Interp
+
+function Interp:init(duration, args, loops, start)
+    AbsInterp.init(self, duration, nil, loops, start)
+    self.table = args.table
+    self.key = args.key
+    self.startval = args.startval
+    self.endval = args.endval
+end
+
+function Interp:trigger(alpha)
+    self.table[self.key] = self.startval + (self.endval - self.startval) * alpha
+end
 	
 ----[[ Time singleton ]]----
 
@@ -121,9 +141,17 @@ function time.timer(duration, callback, loops, start)
 	return timer
 end
 
+
+--- Create, register and return a new abstract interpolator
+function time.absinterp(duration, callback, loops, start)
+    local absinterp = AbsInterp:new(duration, callback, loops, start)
+    time.timers:insert(absinterp)
+    return absinterp
+end
+
 --- Create, register and return a new interpolator
-function time.interp(duration, callback, loops, start)
-	local interp = Interpolator:new(duration, callback, loops, start)
+function time.interp(duration, args, loops, start)
+	local interp = Interp:new(duration, args, loops, start)
 	time.timers:insert(interp)
 	return interp
 end

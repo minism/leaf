@@ -41,21 +41,19 @@ function camera.update(dt)
 end
 
 function camera.zoomIn()
-	-- Create an interpolator to zoom in
-	local startval = camera.zoom
-	local endval = camera.zoom / camera.zoom_speed
-	time.interp(camera.zoom_speed, 
-				function (alpha)
-					camera.zoom = startval + alpha * (endval - startval)
-				end)
+	time.interp(camera.zoom_speed, {
+                    table=camera,
+                    key='zoom',
+                    startval=camera.zoom,
+                    endval=camera.zoom / camera.zoom_speed
+                })
 end
 
 function camera.zoomOut()
-	-- Create an interpolator to zoom out
-	local startval = camera.zoom
-	local endval = camera.zoom * camera.zoom_speed
-	time.interp(camera.zoom_speed, 
-				function (alpha)
-					camera.zoom = startval + alpha * (endval - startval)
-				end)
+	time.interp(camera.zoom_speed, {
+                    table=camera,
+                    key='zoom',
+                    startval=camera.zoom,
+                    endval=camera.zoom * camera.zoom_speed
+                })
 end
