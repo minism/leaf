@@ -1,5 +1,5 @@
 -- ++++++++++++++++++++++++++++++
--- + Leaf Vector Library        +
+-- + Leaf Vector Class          +
 -- + Copyright 2011 Josh Bothun +
 -- + joshbothun@gmail.com       +
 -- + minornine.com              +
