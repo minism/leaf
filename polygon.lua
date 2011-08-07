@@ -5,7 +5,9 @@
 -- + minornine.com              +
 -- ++++++++++++++++++++++++++++++
 
-leaf.Rect = Object.extend('Rect')
+require 'leaf.object'
+
+leaf.Rect = leaf.Object:extend('Rect')
 local Rect = leaf.Rect
 
 function Rect:init(left, top, bottom, right)
@@ -18,12 +20,11 @@ end
 function Rect:contains(arg1, arg2)
 	if arg2 == nil then
 		-- Assume arg1 is an object with x and y fields
-		if arg1.x is not nil and arg1.y is not nil then
+		if arg1.x and arg1.y then
 			return self:contains(arg1.x, arg1.y)
 		else
 			return false
 		end
-	end
 	elseif  arg1 >= self.left and
 			arg1 <= self.right and
 			arg2 >= self.top and
