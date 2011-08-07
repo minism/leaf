@@ -1,0 +1,1 @@
+- Redo simple classes like vector using functional tuples...maybe

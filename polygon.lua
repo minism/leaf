@@ -10,7 +10,7 @@ require 'leaf.object'
 leaf.Rect = leaf.Object:extend('Rect')
 local Rect = leaf.Rect
 
-function Rect:init(left, top, bottom, right)
+function Rect:init(left, top, right, bottom)
 	self.left = left or 0
 	self.top = top or 0
 	self.bottom = bottom or 0
