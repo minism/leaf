@@ -21,3 +21,11 @@ require 'leaf.polygon'
 require 'leaf.layout'
 require 'leaf.camera'
 require 'leaf.loader'
+
+
+--- Imports every name into the global namespace, use with caution
+function leaf.import()
+    for key, val in leaf do
+        _G[key] = val
+    end
+end
