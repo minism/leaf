@@ -25,7 +25,7 @@ require 'leaf.loader'
 
 --- Imports every name into the global namespace, use with caution
 function leaf.import()
-    for key, val in leaf do
+    for key, val in pairs(leaf) do
         _G[key] = val
     end
 end

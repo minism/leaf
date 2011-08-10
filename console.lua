@@ -21,7 +21,12 @@ leaf.console = {}
 local console = leaf.console
 
 console.queue = leaf.Queue:new()
+console.color = {255, 255, 255}
 console.queue.max = 35
+
+function console.setMax(n)
+    console.queue.max = n
+end
 
 function console.write(...)
 	str = ''
@@ -42,7 +47,7 @@ end
 function console.draw()
 	local spacing = 15
 	love.graphics.setFont(12)
-	love.graphics.setColor(255, 255, 255, 150)
+	love.graphics.setColor(unpack(console.color))
 	num = 0
 	for i = console.queue.front, console.queue.back do
 		num = num + 1

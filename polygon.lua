@@ -10,11 +10,19 @@ require 'leaf.object'
 leaf.Rect = leaf.Object:extend('Rect')
 local Rect = leaf.Rect
 
-function Rect:init(left, top, right, bottom)
-	self.left = left or 0
-	self.top = top or 0
-	self.bottom = bottom or 0
-	self.right = right or 0
+function Rect:init(v1, v2, v3, v4)
+    -- If only two values passed, assume right and bottom
+    if v3 == nil or v4 == nil then
+        self.left = 0
+        self.top = 0
+        self.right = v1
+        self.bottom = v2
+    else
+	    self.left = v1 or 0
+	    self.top = v2 or 0
+	    self.bottom = v3 or 0
+	    self.right = v4 or 0
+    end
 end
 
 function Rect:getWidth()	return self.right - self.left 	end
