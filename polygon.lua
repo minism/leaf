@@ -20,8 +20,8 @@ function Rect:init(v1, v2, v3, v4)
     else
 	    self.left = v1 or 0
 	    self.top = v2 or 0
-	    self.bottom = v3 or 0
-	    self.right = v4 or 0
+	    self.right = v3 or 0
+	    self.bottom = v4 or 0
     end
 end
 
@@ -59,4 +59,11 @@ function Rect:intersects(rect)
 			return true
 		end
 	end
+end
+
+function Rect:translate(x, y)
+    self.left = self.left + x
+    self.top = self.top + y
+    self.right = self.right + x
+    self.bottom = self.bottom + y
 end

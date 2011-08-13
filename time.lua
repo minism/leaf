@@ -57,7 +57,7 @@ function Timer:update(dt)
 			end
 			-- Check how many loops remaining, loop infinitely if set to < 0
             self.loops = self.loops - 1
-			if self.loops == 0 then self.stop() end
+			if self.loops == 0 then self:stop() end
 			return true
 		end
 		return false
@@ -83,7 +83,7 @@ function Interpolator:update(dt)
 			self.callback(1)
 			-- Check how many loops remaining, loop infinitely if set to < 0
             self.loops = self.loops - 1
-			if self.loops == 0 then self.stop() end
+			if self.loops == 0 then self:stop() end
 			return true
 		else
 			local alpha = 1.0 - self.timeleft / self.duration
@@ -109,7 +109,7 @@ function time.update(dt)
 		timer:update(dt)
 		if timer.stopped then
 			-- Remove timer from list
-			time.timers:remove(timer)
+			-- time.timers:remove(timer)
 		end
 	end
 end

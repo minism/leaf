@@ -46,11 +46,19 @@ function List:remove(obj)
         if obj == item.value then
             -- Check for edge cases first
             if item == self.head then
-                self.head = self.head.next
-                self.head.prev = nil
+                if self.head.next then
+                    self.head = self.head.next
+                    self.head.prev = nil
+                else
+                    self.head = nil
+                end
             elseif item == self.tail then
-                self.tail = self.tail.prev
-                self.tail.next = nil
+                if self.tail.prev then
+                    self.tail = self.tail.prev
+                    self.tail.next = nil
+                else
+                    self.tail = nil
+                end
             else
                 item.prev.next = item.next
                 item.next.prev = item.prev
@@ -111,6 +119,10 @@ function Stack:pop()
 	return table.remove(self)
 end
 
+function Stack:peek()
+    return self[#self]
+end
+
 function Stack:isEmpty()
 	return table.getn(self) == 0
 end
@@ -141,6 +153,16 @@ function Queue:pop()
     self[self.front] = nil
     self.front = self.front + 1
     return val
+end
+
+function Queue:peekFront()
+    if self.back < self.front then error('Error: Queue empty') end
+    return self[self.front]
+end
+
+function Queue:peekBack()
+    if self.back < self.front then error('Error: Queue empty') end
+    return self[self.back]
 end
 
 function Queue:isEmpty()
