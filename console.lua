@@ -46,9 +46,8 @@ end
 
 function console.draw()
 	local spacing = 15
-	love.graphics.setFont(12)
 	love.graphics.setColor(unpack(console.color))
-	num = 0
+	local num = 0
 	for i = console.queue.front, console.queue.back do
 		num = num + 1
 		local msg = console.queue[i]
