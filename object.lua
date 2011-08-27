@@ -25,8 +25,14 @@ end
 function Object:extend(classname)
     local class = {}
     setmetatable(class, self)
+    -- Inherit metamethods
+    for k, v in pairs(self) do
+        if k:match('^__') then
+            class[k] = v
+        end
+    end
     class.__index = class
-    class.__call = function(c, ...) return c:new(...) end
+    class.__call = function(c, ...) return c:new(...) end -- Constructor shortcut
     class._type = '<CLASS> ' .. classname
     class._class = classname or '<UNNAMED>'
     return class
