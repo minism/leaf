@@ -43,10 +43,10 @@ function Object:type()
     if type(self) == 'table' and self._type then
         return self._type
     else
-        return type(obj)
+        return type(self)
     end
 end
-    
+
 ----[[ Abstract methods ]]----
 
 function Object:init(...) end
