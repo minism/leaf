@@ -52,9 +52,7 @@ function Timer:update(dt)
 		self.timeleft = self.timeleft - dt
 		if self.timeleft < 0.0 then
 			self.timeleft = self.duration
-			if self.callback then
-				self:trigger()
-			end
+			self:trigger()
 			-- Check how many loops remaining, loop infinitely if set to < 0
             self.loops = self.loops - 1
 			if self.loops == 0 then self:stop() end

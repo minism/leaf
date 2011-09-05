@@ -166,5 +166,5 @@ function Queue:peekBack()
 end
 
 function Queue:isEmpty()
-	return self.back > self.front
+	return self.back < self.front
 end

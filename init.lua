@@ -22,6 +22,7 @@ require 'leaf.layout'
 require 'leaf.camera'
 require 'leaf.loader'
 require 'leaf.utils'
+require 'leaf.graph'
 
 --- Imports every name into the global namespace, use with caution
 function leaf.import()

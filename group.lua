@@ -16,7 +16,7 @@ function Group.new()
 	
 	-- Initialize
 	grp.list = leaf.List:new()
-	grp.insert = function(obj) grp.list:insert(obj) end
+	grp.insert = function(obj) grp.list:insert(obj) return obj end
 	grp.remove = function(obj) grp.list:remove(obj) end
 	
 	-- Setup an index metamethod that calls methods on children

@@ -8,7 +8,6 @@
 leaf.Object = {}
 local Object = leaf.Object
 
-Object._class = 'Object'
 Object.__index = Object
 Object.__call = function(c, ...) return c:new(...) end
 
@@ -16,8 +15,7 @@ Object.__call = function(c, ...) return c:new(...) end
 function Object:new(...)
 	local obj = {}
 	setmetatable(obj, self)
-	obj._type = self._class 
-	obj:init(...)
+    if obj.init then obj:init(...) end
 	return obj
 end
 
@@ -33,8 +31,6 @@ function Object:extend(classname)
     end
     class.__index = class
     class.__call = function(c, ...) return c:new(...) end -- Constructor shortcut
-    class._type = '<CLASS> ' .. classname
-    class._class = classname or '<UNNAMED>'
     return class
 end
 
