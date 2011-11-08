@@ -108,7 +108,7 @@ end
 	
 -- Time singleton (main usage) --
 
-leaf.time = leaf.Object()
+leaf.time = {}
 local time = leaf.time
 
 time.timers = leaf.List()
