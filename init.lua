@@ -1,32 +1,42 @@
--- +++++++++++++++++++++++++++++++++
--- + Leaf Love2D Utility Library   +
--- + Copyright 2011 Josh Bothun    +
--- + joshbothun@gmail.com          +
--- + minornine.com                 +
--- +++++++++++++++++++++++++++++++++
+--[[
 
--- Usage: put the 'leaf' directory at the same level as your lua file and require 'leaf'
+#########################################################################
+#                                                                       #
+# leaf                                                                  #
+#                                                                       #
+# Lua utility library for game programming                              #
+#                                                                       #
+# Copyright 2011 Josh Bothun                                            #
+# joshbothun@gmail.com                                                  #
+# http://minornine.com                                                  #
+#                                                                       #
+# This program is free software: you can redistribute it and/or modify  #
+# it under the terms of the GNU General Public License as published by  #
+# the Free Software Foundation, either version 3 of the License, or     #
+# (at your option) any later version.                                   #
+#                                                                       #
+# This program is distributed in the hope that it will be useful,       #
+# but WITHOUT ANY WARRANTY; without even the implied warranty of        #
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         #
+# GNU General Public License <http://www.gnu.org/licenses/> for         #
+# more details.                                                         #
+#                                                                       #
+#                                                                       #
+#########################################################################
+
+--]]
 
 -- Namespace
 leaf = {}
 
-----[[ Modules ]]----
-require 'leaf.object'
-require 'leaf.containers'
-require 'leaf.group'
+-- Modules
+require 'leaf.camera'
 require 'leaf.console'
+require 'leaf.containers'
+require 'leaf.graph'
+require 'leaf.group'
+require 'leaf.loader'
+require 'leaf.object'
+require 'leaf.rect'
 require 'leaf.time'
 require 'leaf.vector'
-require 'leaf.polygon'
-require 'leaf.layout'
-require 'leaf.camera'
-require 'leaf.loader'
-require 'leaf.utils'
-require 'leaf.graph'
-
---- Imports every name into the global namespace, use with caution
-function leaf.import()
-    for key, val in pairs(leaf) do
-        _G[key] = val
-    end
-end
