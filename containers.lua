@@ -1,23 +1,44 @@
--- ++++++++++++++++++++++++++++++
--- + Leaf Container Classes     +
--- + Copyright 2011 Josh Bothun +
--- + joshbothun@gmail.com       +
--- + minornine.com              +
--- ++++++++++++++++++++++++++++++
+--[[
+
+#########################################################################
+#                                                                       #
+# containers.lua                                                        #
+#                                                                       #
+# Various container classes                                             #
+#                                                                       #
+# Copyright 2011 Josh Bothun                                            #
+# joshbothun@gmail.com                                                  #
+# http://minornine.com                                                  #
+#                                                                       #
+# This program is free software: you can redistribute it and/or modify  #
+# it under the terms of the GNU General Public License as published by  #
+# the Free Software Foundation, either version 3 of the License, or     #
+# (at your option) any later version.                                   #
+#                                                                       #
+# This program is distributed in the hope that it will be useful,       #
+# but WITHOUT ANY WARRANTY; without even the implied warranty of        #
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         #
+# GNU General Public License <http://www.gnu.org/licenses/> for         #
+# more details.                                                         #
+#                                                                       #
+#########################################################################
+
+--]]
 
 require 'leaf.object'
 
-local _Node = leaf.Object:extend('_Node')
 
-----[[ Linked List ]]----
+-- Linked List --
 
-function _Node:init(value)
+local _ListNode = leaf.Object:extend()
+
+function _ListNode:init(value)
     self.value = value
     self.prev = nil
     self.next = nil
 end
 
-leaf.List = leaf.Object:extend('List')
+leaf.List = leaf.Object:extend()
 local List = leaf.List
 
 function List:init()
@@ -25,9 +46,9 @@ function List:init()
     self.tail = nil
 end
 
---- Insert an arbitrary object into the list 
+-- Insert an object into the list 
 function List:insert(obj)
-    local node = _Node:new(obj)
+    local node = _ListNode(obj)
     if not self.tail then
         self.head = node
         self.tail = node
@@ -39,8 +60,7 @@ function List:insert(obj)
     return true
 end
 
-
---- Remove an object from the list by table pointer comparison
+-- Remove an object from the list by table pointer comparison
 function List:remove(obj)
     for item in self:_iterNodes() do
         if obj == item.value then
@@ -69,7 +89,7 @@ function List:remove(obj)
     return false
 end
 
---- Iterator function for list objects
+-- Iterator function for list objects
 function List:iter()
     local curr = self.head
     return function()
@@ -83,7 +103,7 @@ function List:iter()
     end
 end
 
---- Iterator function for list node objects, used internally
+-- Iterator function for list node objects, used internally
 function List:_iterNodes()
     local curr = self.head
     return function()
@@ -106,10 +126,15 @@ function List:size()
 	return count
 end
 
-----[[ Stack ]]----
 
-leaf.Stack = leaf.Object:extend('Stack')
+-- Stack --
+
+leaf.Stack = leaf.Object:extend()
 local Stack = leaf.Stack
+
+function Stack:init(max)
+    self.max = max or -1
+end
 
 function Stack:push(obj)
 	table.insert(self, obj)
@@ -124,31 +149,42 @@ function Stack:peek()
 end
 
 function Stack:isEmpty()
-	return table.getn(self) == 0
+	return #self == 0
 end
 	
 
-----[[ Queue ]]----
+-- Queue --
 
 leaf.Queue = leaf.Object:extend('Queue')
 local Queue = leaf.Queue
 
 function Queue:init()
     self.front = 0
-    self.back = -1
-	self.max = -1
+    self.back = 0
+end
+
+-- Array addressing
+function Queue:get(i)
+    return self[self.front + i - 1]
+end
+
+function Queue:len()
+    return self.back - self.front
+end
+
+-- Clear queue by pointer movement -- references may still exist
+function Queue:clear()
+    self.front = 0 
+    self.back = 0
 end
 
 function Queue:push(val)
-    self.back = self.back + 1
     self[self.back] = val
-	if self.max > 0 and self.back - self.front > self.max then
-		self:pop()
-	end
+    self.back = self.back + 1
 end
 
 function Queue:pop()
-    if self.back < self.front then error('Error: Queue empty') end
+    if self:isEmpty() then return nil end
     local val = self[self.front]
     self[self.front] = nil
     self.front = self.front + 1
@@ -156,15 +192,15 @@ function Queue:pop()
 end
 
 function Queue:peekFront()
-    if self.back < self.front then error('Error: Queue empty') end
+    if self:isEmpty() then return nil end
     return self[self.front]
 end
 
 function Queue:peekBack()
-    if self.back < self.front then error('Error: Queue empty') end
+    if self:isEmpty() then return nil end
     return self[self.back]
 end
 
 function Queue:isEmpty()
-	return self.back < self.front
+	return self.back <= self.front
 end

@@ -21,7 +21,6 @@
 # GNU General Public License <http://www.gnu.org/licenses/> for         #
 # more details.                                                         #
 #                                                                       #
-#                                                                       #
 #########################################################################
 
 --]]
@@ -33,7 +32,6 @@ leaf = {}
 require 'leaf.camera'
 require 'leaf.console'
 require 'leaf.containers'
-require 'leaf.graph'
 require 'leaf.group'
 require 'leaf.loader'
 require 'leaf.object'

@@ -55,11 +55,11 @@ local aliases =
     y2 = 'bottom',
 }
 
-function Rect.__index(t, k)
-    if aliases[k] ~= nil then
-        return t[aliases[k]]
+function Rect:__index(key)
+    if aliases[key] ~= nil then
+        return self[aliases[key]]
     else
-        return Rect[k]
+        return Rect[key]
     end
 end
 
