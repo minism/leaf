@@ -25,12 +25,14 @@
 
 --]]        
 
+-- Setup base object
 leaf.Object = {}
 local Object = leaf.Object
-
--- Repeated in extend, but needed for base
 Object.__index = Object
-Object.__call = function(c, ...) return c:new(...) end
+setmetatable(Object, {
+   -- Constructor shortcut
+   __call = function(c, ...) return c:new(...) end,
+})
 
 -- Creates, initializes, and returns a new object
 function Object:new(...)
@@ -41,7 +43,7 @@ function Object:new(...)
 end
 
 -- Creates and returns a new class
-function Object:extend(classname)
+function Object:extend()
     local class = {}
     setmetatable(class, self)
     class._super = self
@@ -52,18 +54,11 @@ function Object:extend(classname)
         end
     end
     class.__index = class
-    class.__call = function(c, ...) return c:new(...) end -- Constructor shortcut
+    class.__call = function(c, ...) return c:new(...) end
     return class
 end
 
--- Abstract methods --
-
-function Object:init(...) end
-
--- Global functions --
-
 -- Check if an object is an instance of its prototype
-
 function isinstance(obj, class)
     return getmetatable(obj) == class
 end
