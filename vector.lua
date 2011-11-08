@@ -31,13 +31,13 @@ require 'math'
 leaf.Vector = leaf.Object:extend()
 local Vector = leaf.Vector
 
-local function assert_vecs(a, b)
-	assert(isinstance(a, Vector) and isinstance(b, Vector), "Operands must be Vectors.")
-end
-
 function Vector:init(x, y)
     self.x = x or 0
     self.y = y or 0
+end
+
+local function assert_vecs(a, b)
+	assert(isinstance(a, Vector) and isinstance(b, Vector), "Operands must be Vectors.")
 end
 
 function Vector.__add(a, b)
@@ -110,15 +110,28 @@ function Vector:len()
 end
 
 function Vector:normalize()
-	return self / self:len()
+	local len = self:len()
+	self.x = self.x / len
+	self.y = self.y / len
+	return self
+end
+
+function Vector:normalized()
+	return self:copy():normalize()
 end
 
 function Vector:rotate(theta)
-	return Vector(self.x * math.cos(theta) - self.y * math.sin(theta),
-				  self.x * math.sin(theta) + self.y * math.cos(theta))
+	self.x = self.x * math.cos(theta) - self.y * math.sin(theta)
+	self.y = self.x * math.sin(theta) + self.y * math.cos(theta)
+	return self
+end
+
+function Vector:rotated(theta)
+	return self:copy():rotate(theta)
 end
 
 function Vector:reset()
 	self.x = 0
 	self.y = 0
+	return self
 end
