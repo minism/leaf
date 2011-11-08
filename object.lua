@@ -25,14 +25,17 @@
 
 --]]        
 
+-- Constructor shortcut
+local function constructor(class, ...)
+    return class:new(...)
+end
+
 -- Setup base object
 leaf.Object = {}
 local Object = leaf.Object
+setmetatable(Object, { __call = constructor })
 Object.__index = Object
-setmetatable(Object, {
-   -- Constructor shortcut
-   __call = function(c, ...) return c:new(...) end,
-})
+Object.__call = constructor
 
 -- Creates, initializes, and returns a new object
 function Object:new(...)
@@ -54,7 +57,7 @@ function Object:extend()
         end
     end
     class.__index = class
-    class.__call = function(c, ...) return c:new(...) end
+    class.__call = constructor
     return class
 end
 
