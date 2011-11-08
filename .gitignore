@@ -1,5 +1,2 @@
-# Eclipse junk
-.project
-
-# My windows thing to copy the library
-install
+# OSX
+.DS_Store

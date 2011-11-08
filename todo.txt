@@ -1,2 +1,0 @@
-- Redo simple classes like vector using functional tuples...maybe
-- Timer objects are not being cleaned up from list properly
