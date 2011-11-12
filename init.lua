@@ -29,8 +29,6 @@
 leaf = {}
 
 -- Modules
-require 'leaf.camera'
-require 'leaf.console'
 require 'leaf.containers'
 require 'leaf.group'
 require 'leaf.loader'
