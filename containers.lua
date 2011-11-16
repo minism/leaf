@@ -29,7 +29,6 @@ require 'leaf.object'
 
 
 -- Linked List --
-
 local _ListNode = leaf.Object:extend()
 
 function _ListNode:init(value)
@@ -127,8 +126,43 @@ function List:len()
 end
 
 
--- Stack --
+-- Set --
+leaf.Set = leaf.Object:extend()
+local Set = leaf.Set
 
+function Set:init(...)
+    self.set = {}
+    if type(arg[1]) == 'table' then
+        -- Build set from table
+        for i, val in ipairs(arg[1]) do
+            self.set[val] = true
+        end
+    else
+        -- Build set from individual items
+        for i, val in ipairs(arg) do
+            self.set[val] = true
+        end
+    end
+end
+
+function Set:insert(obj)
+    self.set[obj] = true
+end
+
+function Set:remove(obj)
+    self.set[obj] = nil
+end
+
+function Set:contains(obj)
+    if self.set[obj] then return true else return false end
+end
+
+function Set:iter()
+    return pairs(self.set)
+end
+
+
+-- Stack --
 leaf.Stack = leaf.Object:extend()
 local Stack = leaf.Stack
 
@@ -154,7 +188,6 @@ end
 	
 
 -- Queue --
-
 leaf.Queue = leaf.Object:extend('Queue')
 local Queue = leaf.Queue
 
