@@ -45,6 +45,11 @@ function List:init()
     self.tail = nil
 end
 
+function List:clear()
+    self.head = nil
+    self.tail = nil
+end
+
 -- Insert an object into the list 
 function List:insert(obj)
     local node = _ListNode(obj)
@@ -163,6 +168,8 @@ end
 
 
 -- Stack --
+
+-- No iter required, as we can use ipairs() effectively
 leaf.Stack = leaf.Object:extend()
 local Stack = leaf.Stack
 
@@ -170,8 +177,17 @@ function Stack:init(max)
     self.max = max or -1
 end
 
+function Stack:clear()
+    local n = #self
+    for i = 1, n do
+        table.remove(self)
+    end
+end
+
 function Stack:push(obj)
-	table.insert(self, obj)
+    if self.max >= 0 and #self < self.max then
+	   table.insert(self, obj)
+    end
 end
 
 function Stack:pop()
@@ -196,6 +212,12 @@ function Queue:init()
     self.back = 0
 end
 
+-- Clear queue by pointer movement -- references may still exist in table
+function Queue:clear()
+    self.front = 0 
+    self.back = 0
+end
+
 -- Array addressing
 function Queue:get(i)
     return self[self.front + i - 1]
@@ -203,12 +225,6 @@ end
 
 function Queue:len()
     return self.back - self.front
-end
-
--- Clear queue by pointer movement -- references may still exist
-function Queue:clear()
-    self.front = 0 
-    self.back = 0
 end
 
 function Queue:push(val)
@@ -225,13 +241,24 @@ function Queue:pop()
 end
 
 function Queue:peekFront()
-    if self:isEmpty() then return nil end
     return self[self.front]
 end
 
 function Queue:peekBack()
-    if self:isEmpty() then return nil end
     return self[self.back]
+end
+
+function Queue:iter()
+    local i = self.front
+    return function()
+        if self[i] then
+            local val = self[i]
+            i = i + 1
+            return val
+        else
+            return nil
+        end
+    end
 end
 
 function Queue:isEmpty()
