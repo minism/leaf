@@ -118,7 +118,7 @@ function List:_iterNodes()
 end
 
 --- Return size of list
-function List:size()
+function List:len()
 	local count = 0
 	for _ in self:iter() do
 		count = count + 1
