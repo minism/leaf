@@ -42,8 +42,9 @@ function recursiveYieldingLoader(root, file_callback, interp_callback)
 			count = count + 1
 			fullpath = path .. '/' .. name
 			if not docount and love.filesystem.isFile(fullpath) then
-				-- Strip root dir from key
+				-- Strip root dir and extension from key
 				local key = string.sub(fullpath, fullpath:find('/') + 1, fullpath:len())
+				key = key:gsub('%.[^.]*$', '')
 				map[key] = file_callback(fullpath)
 				if type(interp_callback) == 'function' then
 					interp_callback(count / total)
