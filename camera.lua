@@ -9,6 +9,7 @@ function Camera:init(target_func)
 end
 
 function Camera:track(target_func)
+    assert(type(target_func) == 'function')
     self.target_func = target_func
 end
 
