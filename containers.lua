@@ -259,7 +259,7 @@ function Queue:iter()
         if self[i] then
             local val = self[i]
             i = i + 1
-            return val
+            return i, val
         else
             return nil
         end
