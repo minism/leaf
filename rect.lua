@@ -188,6 +188,13 @@ function Rect:moveTo(x, y)
     return self
 end
 
+function Rect:set(left, top, bottom, right)
+    self.left = left
+    self.top = top
+    self.bottom = bottom
+    self.right = right
+end
+
 -- Scale the rectangle from its center instead of the corner
 function Rect:centerScale(amt)
     local w = self:w()

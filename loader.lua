@@ -43,3 +43,14 @@ function loader.loadImages(dir)
 	end
     return map
 end
+
+-- Load a shader from a file and replace the REAL gl commands with
+-- the new silly ones.
+function loader.loadShader(path)
+	local tmp = love.filesystem.read(path)
+	tmp = tmp:gsub('float', 'number')
+	tmp = tmp:gsub('sampler2D', 'Image')
+	tmp = tmp:gsub('uniform', 'extern')
+	tmp = tmp:gsub('texture2D', 'Texel')
+	return tmp
+end

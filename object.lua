@@ -23,7 +23,7 @@
 #                                                                      #
 ########################################################################
 
---]]        
+--]]
 
 -- Constructor shortcut
 local function constructor(class, ...)

@@ -120,6 +120,16 @@ function Vector:normalized()
 	return self:copy():normalize()
 end
 
+function Vector:translate(x, y)
+	self.x = self.x + x
+	self.y = self.y + y
+	return self
+end
+
+function Vector:translated(x, y)
+	return self:copy():translate(x, y)
+end
+
 function Vector:rotate(theta)
 	self.x = self.x * math.cos(theta) - self.y * math.sin(theta)
 	self.y = self.x * math.sin(theta) + self.y * math.cos(theta)
@@ -130,8 +140,22 @@ function Vector:rotated(theta)
 	return self:copy():rotate(theta)
 end
 
+function Vector:set(a, b)
+	if isinstance(a, Vector) then
+		self.x = a.x
+		self.y = a.y
+	else
+		self.x = a
+		self.y = b
+	end
+	return self
+end
+
 function Vector:reset()
 	self.x = 0
 	self.y = 0
 	return self
 end
+
+-- Convenience naming
+leaf.Point = leaf.Vector
