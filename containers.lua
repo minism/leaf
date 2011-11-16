@@ -255,11 +255,13 @@ end
 
 function Queue:iter()
     local i = self.front
+    local count = 0
     return function()
         if self[i] then
             local val = self[i]
             i = i + 1
-            return i, val
+            count = count + 1
+            return count, val
         else
             return nil
         end
