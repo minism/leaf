@@ -31,7 +31,7 @@ leaf = {}
 -- Modules
 require 'leaf.containers'
 require 'leaf.group'
-require 'leaf.loader'
+require 'leaf.fs'
 require 'leaf.object'
 require 'leaf.rect'
 require 'leaf.time'

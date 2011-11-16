@@ -2,7 +2,7 @@
 
 #########################################################################
 #                                                                       #
-# loader.lua                                                            #
+# fs.lua                                                                #
 #                                                                       #
 # Love2D filesystem loading functions                                   #
 #                                                                       #
@@ -27,8 +27,8 @@
 
 require 'strong'          
 
-leaf.loader = {}
-local loader = leaf.loader
+leaf.fs = {}
+local fs = leaf.fs
 
 -- Generic loading function that does a deep search through `path`, calling
 -- `file_callback` on each file and storing it in a map, and also calling
@@ -68,22 +68,22 @@ function recursiveYieldingLoader(root, file_callback, interp_callback)
 end
 
 -- Load directory tree into a map of lua chunks
-function loader.loadChunks(path, callback)
+function fs.loadChunks(path, callback)
 	return recursiveYieldingLoader(path, love.filesystem.load, callback)
 end
 
 -- Load directory tree into a map of love.graphics.Image
-function loader.loadImages(path, callback)
+function fs.loadImages(path, callback)
 	return recursiveYieldingLoader(path, love.graphics.newImage, callback)
 end
 
 -- Load directory tree into a map of love.audio.Source
-function loader.loadSounds(path, callback)
+function fs.loadSounds(path, callback)
 	return recursiveYieldingLoader(path, love.audio.newSource, callback)
 end
 
 -- Load directory tree into a map of love.graphics.PixelEffect
-function loader.loadShaders(path, callback)
+function fs.loadShaders(path, callback)
 	-- Replace shaders keywords with the fake ones
 	function subshader(file)
 		local tmp = love.filesystem.read(file)
