@@ -23,34 +23,74 @@
 #                                                                       #
 #########################################################################      
 
---]]                                
+--]]                      
+
+require 'strong'          
 
 leaf.loader = {}
 local loader = leaf.loader
 
---- This function does a shallow search through `dir` and creates new 
---- Love2D images for every image found.  Returns a table mapping filenames
---- To image objects.
-function loader.loadImages(dir)
-    local map = {}
-	local files = love.filesystem.enumerate(dir)
-	for key, val in ipairs(files) do
-		basename = val
-		path = dir .. '/' .. basename
-		if love.filesystem.isFile(path) then
-			map[basename] = love.graphics.newImage(path)
+-- Generic loading function that does a deep search through `path`, calling
+-- `file_callback` on each file and storing it in a map, and also calling
+-- `interp_callback` with a percentage of completion arg, for easy hooking.
+-- Finally, the function returns the constructed map
+function recursiveYieldingLoader(root, file_callback, interp_callback)
+	local map = {}
+	local count, total = 0, 0
+	function iter(path, docount)
+		for i, name in ipairs(love.filesystem.enumerate(path)) do
+			count = count + 1
+			fullpath = path .. '/' .. name
+			if not docount and love.filesystem.isFile(fullpath) then
+				-- Strip root dir from key
+				local key = string.sub(fullpath, fullpath:find('/') + 1, fullpath:len())
+				map[key] = file_callback(fullpath)
+				if type(interp_callback) == 'function' then
+					interp_callback(count / total)
+				end
+			elseif love.filesystem.isDirectory(fullpath) then
+				iter(fullpath, docount)
+			end
 		end
 	end
-    return map
+
+	-- Count number of files in tree and store total
+	iter(root, true)
+	total = count
+	count = 0
+
+	-- Run actual function
+	iter(root)
+
+	-- Return resulting map
+	return map
 end
 
--- Load a shader from a file and replace the REAL gl commands with
--- the new silly ones.
-function loader.loadShader(path)
-	local tmp = love.filesystem.read(path)
-	tmp = tmp:gsub('float', 'number')
-	tmp = tmp:gsub('sampler2D', 'Image')
-	tmp = tmp:gsub('uniform', 'extern')
-	tmp = tmp:gsub('texture2D', 'Texel')
-	return tmp
+-- Load directory tree into a map of lua chunks
+function loader.loadChunks(path, callback)
+	return recursiveYieldingLoader(path, love.filesystem.load, callback)
+end
+
+-- Load directory tree into a map of love.graphics.Image
+function loader.loadImages(path, callback)
+	return recursiveYieldingLoader(path, love.graphics.newImage, callback)
+end
+
+-- Load directory tree into a map of love.audio.Source
+function loader.loadSounds(path, callback)
+	return recursiveYieldingLoader(path, love.audio.newSource, callback)
+end
+
+-- Load directory tree into a map of love.graphics.PixelEffect
+function loader.loadShaders(path, callback)
+	-- Replace shaders keywords with the fake ones
+	function subshader(file)
+		local tmp = love.filesystem.read(file)
+		tmp = tmp:gsub('float', 'number')
+		tmp = tmp:gsub('sampler2D', 'Image')
+		tmp = tmp:gsub('uniform', 'extern')
+		tmp = tmp:gsub('texture2D', 'Texel')
+		return tmp
+	end
+	return recursiveYieldingLoader(path, subshader, callback)
 end
