@@ -91,7 +91,7 @@ function loader.loadShaders(path, callback)
 		tmp = tmp:gsub('sampler2D', 'Image')
 		tmp = tmp:gsub('uniform', 'extern')
 		tmp = tmp:gsub('texture2D', 'Texel')
-		return tmp
+		return love.graphics.newPixelEffect(tmp)
 	end
 	return recursiveYieldingLoader(path, subshader, callback)
 end
