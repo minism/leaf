@@ -25,6 +25,7 @@
 
 --]]
 
+require 'math'
 require 'leaf.object'
 require 'leaf.containers'
 
@@ -75,7 +76,7 @@ function Timer:update(dt)
 			self.timeleft = self.timeleft + self.duration
 			self.callback()
 			-- Check how many loops remaining, loop infinitely if set to < 0
-            self.loops = Math.max(self.loops - 1, -1) -- Prevent overflow
+            self.loops = math.max(self.loops - 1, -1) -- Prevent overflow
 			if self.loops == 0 then self:kill() end
 			return true
 		end
