@@ -10,4 +10,6 @@ A collection of various utilities, objects, and functions for game programming i
 * **time.lua**: Timer module for scheduling events and interpolations
 * **vector.lua**: 2D vector class
 * **rect.lua**: 2D rectangle class
-
+* **polygon.lua**: 2D generic polygon class
+* **console.lua**: An in-game console system
+* **camera.lua**: A camera with tracking and depth
