@@ -44,8 +44,9 @@ function Camera:update(dt)
     self.pos.x, self.pos.y = self.target_func()
 end
 
--- Sets up draw matrix to center the target given by self.target_func
--- If a Z is specified, the depth will be altered
+-- Sets up matrix to center the active target
+-- If a Z parameter is specified, it is considered a depth factor relative to the target
+-- e.g., if z = 2.0, objects will appear 2x as close as the target
 function Camera:push(z)
     -- Default to 1, which is the plane of the target
     local z = z or 1
