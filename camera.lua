@@ -26,12 +26,15 @@
 --]]
 
 require 'leaf.object'
+require 'leaf.vector'
+require 'leaf.rect'
 
 leaf.Camera = leaf.Object:extend()
 local Camera = leaf.Camera
 
 function Camera:init(target_func)
     if target_func then self:track(target_func) end
+    -- Camera "position" represented by top left corner
     self.pos = Point()
 end
 
@@ -41,7 +44,9 @@ function Camera:track(target_func)
 end
 
 function Camera:update(dt)
-    self.pos.x, self.pos.y = self.target_func()
+    local x, y = self.target_func() 
+    self.pos.x = x - love.graphics.getWidth() / 2
+    self.pos.y = y - love.graphics.getHeight() / 2
 end
 
 -- Sets up matrix to center the active target
@@ -51,14 +56,41 @@ function Camera:push(z)
     -- Default to 1, which is the plane of the target
     local z = z or 1
 
-    -- Push stack
+    -- Use builtin matrix
     love.graphics.push()
 
     -- Center on target, offset depth by Z
-    love.graphics.translate(z * (-self.pos.x + love.graphics.getWidth() / 2), 
-                            z * (-self.pos.y + love.graphics.getHeight() / 2))
+    love.graphics.translate(z * -self.pos.x, z * -self.pos.y)
 end
 
 function Camera:pop()
     love.graphics.pop()
 end
+
+-- Convert a vector in screen space to world space.
+-- ("World space" means the coordinate space of the camera's target)
+function Camera:toWorld(x, y)
+    if isinstance(x, leaf.Vector) then
+        return x:translated(self.pos.x, self.pos.y)
+    else
+        return x + self.pos.x, y + self.pos.y
+    end
+end
+
+-- Convert a vector in world space to screen space.
+-- ("World space" means the coordinate space of the camera's target)
+function Camera:toScreen(x, y)
+    if isinstance(x, leaf.Vector) then
+        return x:translated(-self.pos.x, -self.pos.y)
+    else
+        return x - self.pos.x, y - self.pos.y
+    end
+end
+
+-- Return a leaf.Rect representing the viewable world coordinates
+function Camera:getClip()
+    return leaf.Rect(self.pos.x, self.pos.y, 
+                self.pos.x + love.graphics.getWidth(), 
+                self.pos.y + love.graphics.getHeight())
+end
+
