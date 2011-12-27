@@ -36,6 +36,7 @@ function Camera:init(target_func)
     if target_func then self:track(target_func) end
     -- Camera "position" represented by top left corner
     self.pos = Point()
+    self.scale = 1
 end
 
 function Camera:track(target_func)
@@ -45,8 +46,8 @@ end
 
 function Camera:update(dt)
     local x, y = self.target_func() 
-    self.pos.x = x - love.graphics.getWidth() / 2
-    self.pos.y = y - love.graphics.getHeight() / 2
+    self.pos.x = x - love.graphics.getWidth() / 2 / self.scale
+    self.pos.y = y - love.graphics.getHeight() / 2 / self.scale
 end
 
 -- Sets up matrix to center the active target
@@ -59,7 +60,8 @@ function Camera:push(z)
     -- Use builtin matrix
     love.graphics.push()
 
-    -- Center on target, offset depth by Z
+    -- Center on target, offset depth by Z, scale by camera scale
+    love.graphics.scale(self.scale, self.scale)
     love.graphics.translate(z * -self.pos.x, z * -self.pos.y)
 end
 
