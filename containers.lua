@@ -137,16 +137,12 @@ local Set = leaf.Set
 
 function Set:init(...)
     self.set = {}
+    local items = arg
     if type(arg[1]) == 'table' then
-        -- Build set from table
-        for i, val in ipairs(arg[1]) do
-            self.set[val] = true
-        end
-    else
-        -- Build set from individual items
-        for i, val in ipairs(arg) do
-            self.set[val] = true
-        end
+        items = arg[1]
+    end
+    for i, val in ipairs(items) do
+        self.set[val] = true
     end
 end
 
