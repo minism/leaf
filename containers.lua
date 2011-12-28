@@ -123,11 +123,11 @@ end
 
 --- Return size of list
 function List:len()
-	local count = 0
-	for _ in self:iter() do
-		count = count + 1
-	end
-	return count
+    local count = 0
+    for _ in self:iter() do
+        count = count + 1
+    end
+    return count
 end
 
 
@@ -186,12 +186,12 @@ end
 
 function Stack:push(obj)
     if self.max >= 0 and #self < self.max then
-	   table.insert(self, obj)
+       table.insert(self, obj)
     end
 end
 
 function Stack:pop()
-	return table.remove(self)
+    return table.remove(self)
 end
 
 function Stack:peek()
@@ -199,9 +199,9 @@ function Stack:peek()
 end
 
 function Stack:isEmpty()
-	return #self == 0
+    return #self == 0
 end
-	
+    
 
 -- Queue --
 leaf.Queue = leaf.Object:extend('Queue')
@@ -269,5 +269,5 @@ function Queue:iter()
 end
 
 function Queue:isEmpty()
-	return self.back <= self.front
+    return self.back <= self.front
 end

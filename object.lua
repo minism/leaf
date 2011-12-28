@@ -39,10 +39,10 @@ Object.__call = constructor
 
 -- Creates, initializes, and returns a new object
 function Object:new(...)
-	local obj = {}
-	setmetatable(obj, self)
+    local obj = {}
+    setmetatable(obj, self)
     if obj.init then obj:init(...) end
-	return obj
+    return obj
 end
 
 -- Creates and returns a new class

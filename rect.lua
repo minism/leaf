@@ -120,8 +120,8 @@ function Rect:unpack()
     return self.left, self.top, self:w(), self:h()
 end
 
-function Rect:w()	return self.right - self.left 	end
-function Rect:h()	return self.bottom - self.top	end
+function Rect:w()   return self.right - self.left   end
+function Rect:h()   return self.bottom - self.top   end
 Rect.width, Rect.height = Rect.w, Rect.h
 
 function Rect:area()
@@ -134,35 +134,35 @@ end
 
 -- Check if rect contains an object or a point
 function Rect:contains(arg1, arg2)
-	if arg2 == nil then
-		-- Assume arg1 is an object with x and y fields
+    if arg2 == nil then
+        -- Assume arg1 is an object with x and y fields
         assert(arg1.x ~= nil and arg1.y ~= nil, "Object being queried must contain 'x' and 'y' fields.")
         return self:contains(arg1.x, arg1.y)
-	elseif  arg1 >= self.left and
-			arg1 <= self.right and
-			arg2 >= self.top and
-			arg2 <= self.bottom then 
-				return true		
-	end
-	return false
+    elseif  arg1 >= self.left and
+            arg1 <= self.right and
+            arg2 >= self.top and
+            arg2 <= self.bottom then 
+                return true     
+    end
+    return false
 end
 
 -- Check if rect intersects with another rect
 function Rect:intersects(rect)
     assert_rects(self, rect)
-	if rect.left >= self.left and rect.left <= self.right then
-		if rect.top >= self.top and rect.top <= self.bottom then
-			return true
-		elseif rect.bottom >= self.top and rect.bottom <= self.bottom then
-			return true
-		end
-	elseif rect.right >= self.left and rect.right >= self.right then
-		if rect.top >= self.top and rect.top <= self.bottom then
-			return true
-		elseif rect.bottom >= self.top and rect.bottom <= self.bottom then
-			return true
-		end
-	end
+    if rect.left >= self.left and rect.left <= self.right then
+        if rect.top >= self.top and rect.top <= self.bottom then
+            return true
+        elseif rect.bottom >= self.top and rect.bottom <= self.bottom then
+            return true
+        end
+    elseif rect.right >= self.left and rect.right >= self.right then
+        if rect.top >= self.top and rect.top <= self.bottom then
+            return true
+        elseif rect.bottom >= self.top and rect.bottom <= self.bottom then
+            return true
+        end
+    end
     return false
 end
 

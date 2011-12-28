@@ -37,124 +37,124 @@ function Vector:init(x, y)
 end
 
 local function assert_vecs(a, b)
-	assert(isinstance(a, Vector) and isinstance(b, Vector), "Operands must be Vectors.")
+    assert(isinstance(a, Vector) and isinstance(b, Vector), "Operands must be Vectors.")
 end
 
 function Vector.__add(a, b)
-	assert_vecs(a, b)
-	return Vector(a.x + b.x, a.y + b.y)
+    assert_vecs(a, b)
+    return Vector(a.x + b.x, a.y + b.y)
 end
 
 function Vector.__sub(a, b)
-	assert_vecs(a, b)
-	return Vector(a.x - b.x, a.y - b.y)
+    assert_vecs(a, b)
+    return Vector(a.x - b.x, a.y - b.y)
 end
 
 function Vector.__mul(a, b)
-	if type(a) == 'number' then
-		assert(isinstance(b, Vector), "Operands must be numbers or vectors.")
-		return Vector(b.x * a, b.y * a)
-	elseif type(b) == 'number' then
-		assert(isinstance(a, Vector), "Operands must be numbers or vectors.")
-		return Vector(a.x * b, a.y * b)
-	else
-		assert_vecs(a, b)
-		return Vector(a.x * b.x, a.y * b.y)
-	end
+    if type(a) == 'number' then
+        assert(isinstance(b, Vector), "Operands must be numbers or vectors.")
+        return Vector(b.x * a, b.y * a)
+    elseif type(b) == 'number' then
+        assert(isinstance(a, Vector), "Operands must be numbers or vectors.")
+        return Vector(a.x * b, a.y * b)
+    else
+        assert_vecs(a, b)
+        return Vector(a.x * b.x, a.y * b.y)
+    end
 end
 
 function Vector.__div(a, b)
-	assert(isinstance(a, Vector) and type(b) == 'number', "Can only divide a Vector by a number.")
-	return Vector(a.x / b, a.y / b)
+    assert(isinstance(a, Vector) and type(b) == 'number', "Can only divide a Vector by a number.")
+    return Vector(a.x / b, a.y / b)
 end
 
 function Vector.__eq(a, b)
-	assert_vecs(a, b)
-	return a.x == b.x and a.y == b.y
+    assert_vecs(a, b)
+    return a.x == b.x and a.y == b.y
 end
 
 function Vector.__lt(a, b)
-	assert_vecs(a, b)
-	return a:len() < b:len()
+    assert_vecs(a, b)
+    return a:len() < b:len()
 end
 
 function Vector.__lte(a, b)
-	assert_vecs(a, b)
-	return a:len() <= b:len()
+    assert_vecs(a, b)
+    return a:len() <= b:len()
 end
 
 function Vector.__gt(a, b)
-	assert_vecs(a, b)
-	return a:len() > b:len()
+    assert_vecs(a, b)
+    return a:len() > b:len()
 end
 
 function Vector.__gte(a, b)
-	assert_vecs(a, b)
-	return a:len() >= b:len()
+    assert_vecs(a, b)
+    return a:len() >= b:len()
 end
 
 function Vector:__tostring()
-	return "(" .. self.x .. "," .. self.y .. ")"
+    return "(" .. self.x .. "," .. self.y .. ")"
 end
 
 function Vector:copy()
-	return Vector(self.x, self.y)
+    return Vector(self.x, self.y)
 end
 
 function Vector:unpack()
-	return self.x, self.y
+    return self.x, self.y
 end
 
 function Vector:len()
-	return math.sqrt(self.x * self.x, self.y * self.y)
+    return math.sqrt(self.x * self.x, self.y * self.y)
 end
 
 function Vector:normalize()
-	local len = self:len()
-	self.x = self.x / len
-	self.y = self.y / len
-	return self
+    local len = self:len()
+    self.x = self.x / len
+    self.y = self.y / len
+    return self
 end
 
 function Vector:normalized()
-	return self:copy():normalize()
+    return self:copy():normalize()
 end
 
 function Vector:translate(x, y)
-	self.x = self.x + x
-	self.y = self.y + y
-	return self
+    self.x = self.x + x
+    self.y = self.y + y
+    return self
 end
 
 function Vector:translated(x, y)
-	return self:copy():translate(x, y)
+    return self:copy():translate(x, y)
 end
 
 function Vector:rotate(theta)
-	self.x = self.x * math.cos(theta) - self.y * math.sin(theta)
-	self.y = self.x * math.sin(theta) + self.y * math.cos(theta)
-	return self
+    self.x = self.x * math.cos(theta) - self.y * math.sin(theta)
+    self.y = self.x * math.sin(theta) + self.y * math.cos(theta)
+    return self
 end
 
 function Vector:rotated(theta)
-	return self:copy():rotate(theta)
+    return self:copy():rotate(theta)
 end
 
 function Vector:set(a, b)
-	if isinstance(a, Vector) then
-		self.x = a.x
-		self.y = a.y
-	else
-		self.x = a
-		self.y = b
-	end
-	return self
+    if isinstance(a, Vector) then
+        self.x = a.x
+        self.y = a.y
+    else
+        self.x = a
+        self.y = b
+    end
+    return self
 end
 
 function Vector:reset()
-	self.x = 0
-	self.y = 0
-	return self
+    self.x = 0
+    self.y = 0
+    return self
 end
 
 -- Convenience naming

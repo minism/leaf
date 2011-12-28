@@ -35,63 +35,63 @@ local fs = leaf.fs
 -- `interp_callback` with a percentage of completion arg, for easy hooking.
 -- Finally, the function returns the constructed map
 function recursiveYieldingLoader(root, file_callback, interp_callback)
-	local map = {}
-	local count, total = 0, 0
-	function iter(path, docount)
-		for i, name in ipairs(love.filesystem.enumerate(path)) do
-			count = count + 1
-			fullpath = path .. '/' .. name
-			if not docount and love.filesystem.isFile(fullpath) then
-				-- Strip root dir and extension from key
-				local key = string.sub(fullpath, fullpath:find('/') + 1, fullpath:len())
-				key = key:gsub('%.[^.]*$', '')
-				map[key] = file_callback(fullpath)
-				if type(interp_callback) == 'function' then
-					interp_callback(count / total)
-				end
-			elseif love.filesystem.isDirectory(fullpath) then
-				iter(fullpath, docount)
-			end
-		end
-	end
+    local map = {}
+    local count, total = 0, 0
+    function iter(path, docount)
+        for i, name in ipairs(love.filesystem.enumerate(path)) do
+            count = count + 1
+            fullpath = path .. '/' .. name
+            if not docount and love.filesystem.isFile(fullpath) then
+                -- Strip root dir and extension from key
+                local key = string.sub(fullpath, fullpath:find('/') + 1, fullpath:len())
+                key = key:gsub('%.[^.]*$', '')
+                map[key] = file_callback(fullpath)
+                if type(interp_callback) == 'function' then
+                    interp_callback(count / total)
+                end
+            elseif love.filesystem.isDirectory(fullpath) then
+                iter(fullpath, docount)
+            end
+        end
+    end
 
-	-- Count number of files in tree and store total
-	iter(root, true)
-	total = count
-	count = 0
+    -- Count number of files in tree and store total
+    iter(root, true)
+    total = count
+    count = 0
 
-	-- Run actual function
-	iter(root)
+    -- Run actual function
+    iter(root)
 
-	-- Return resulting map
-	return map
+    -- Return resulting map
+    return map
 end
 
 -- Load directory tree into a map of lua chunks
 function fs.loadChunks(path, callback)
-	return recursiveYieldingLoader(path, love.filesystem.load, callback)
+    return recursiveYieldingLoader(path, love.filesystem.load, callback)
 end
 
 -- Load directory tree into a map of love.graphics.Image
 function fs.loadImages(path, callback)
-	return recursiveYieldingLoader(path, love.graphics.newImage, callback)
+    return recursiveYieldingLoader(path, love.graphics.newImage, callback)
 end
 
 -- Load directory tree into a map of love.audio.Source
 function fs.loadSounds(path, callback)
-	return recursiveYieldingLoader(path, love.audio.newSource, callback)
+    return recursiveYieldingLoader(path, love.audio.newSource, callback)
 end
 
 -- Load directory tree into a map of love.graphics.PixelEffect
 function fs.loadShaders(path, callback)
-	-- Replace shaders keywords with the fake ones
-	function subshader(file)
-		local tmp = love.filesystem.read(file)
-		tmp = tmp:gsub('float', 'number')
-		tmp = tmp:gsub('sampler2D', 'Image')
-		tmp = tmp:gsub('uniform', 'extern')
-		tmp = tmp:gsub('texture2D', 'Texel')
-		return love.graphics.newPixelEffect(tmp)
-	end
-	return recursiveYieldingLoader(path, subshader, callback)
+    -- Replace shaders keywords with the fake ones
+    function subshader(file)
+        local tmp = love.filesystem.read(file)
+        tmp = tmp:gsub('float', 'number')
+        tmp = tmp:gsub('sampler2D', 'Image')
+        tmp = tmp:gsub('uniform', 'extern')
+        tmp = tmp:gsub('texture2D', 'Texel')
+        return love.graphics.newPixelEffect(tmp)
+    end
+    return recursiveYieldingLoader(path, subshader, callback)
 end
