@@ -49,7 +49,6 @@ end
 function Object:extend()
     local class = {}
     setmetatable(class, self)
-    class._super = self
     -- Inherit metamethods
     for k, v in pairs(self) do
         if k:match('^__') then
