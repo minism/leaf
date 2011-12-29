@@ -32,37 +32,43 @@ require 'leaf.rect'
 leaf.Camera = leaf.Object:extend()
 local Camera = leaf.Camera
 
-function Camera:init(target_func)
-    if target_func then self:track(target_func) end
-    -- Camera "position" represented by top left corner
-    self.pos = Point()
+function Camera:init(track_func)
+    if track_func then self:track(track_func) end
     self.scale = 1
 end
 
-function Camera:track(target_func)
-    assert(type(target_func) == 'function')
-    self.target_func = target_func
+-- Set the cameras tracking function
+function Camera:track(track_func)
+    assert(type(track_func) == 'function')
+    self.track_func = track_func
 end
 
-function Camera:update(dt)
-    local x, y = self.target_func() 
-    self.pos.x = x - love.graphics.getWidth() / 2 / self.scale
-    self.pos.y = y - love.graphics.getHeight() / 2 / self.scale
+-- Return the upper left corner of the camera in world space
+function Camera:getPosition()
+    local tx, ty = self.track_func() 
+    return tx - love.graphics.getWidth() / 2 / self.scale, ty - love.graphics.getHeight() / 2 / self.scale
+end
+
+-- Return a leaf.Rect representing the viewable rectangle in world space
+function Camera:getClip()
+    local x, y = self:getPosition()
+    return leaf.Rect(x, y, x + love.graphics.getWidth(), y + love.graphics.getHeight())
 end
 
 -- Sets up matrix to center the active target
 -- If a Z parameter is specified, it is considered a depth factor relative to the target
 -- e.g., if z = 2.0, objects will appear 2x as close as the target
-function Camera:push(z)
-    -- Default to 1, which is the plane of the target
+function Camera:push(z)  
+    -- Default depth to 1, which is the plane of the target
     local z = z or 1
+    local x, y = self:getPosition()
 
     -- Use builtin matrix
     love.graphics.push()
 
     -- Center on target, offset depth by Z, scale by camera scale
     love.graphics.scale(self.scale, self.scale)
-    love.graphics.translate(z * -self.pos.x, z * -self.pos.y)
+    love.graphics.translate(z * -x, z * -y)
 end
 
 function Camera:pop()
@@ -72,27 +78,21 @@ end
 -- Convert a vector in screen space to world space.
 -- ("World space" means the coordinate space of the camera's target)
 function Camera:toWorld(x, y)
+    local cam_x, cam_y = self:getPosition()
     if isinstance(x, leaf.Vector) then
-        return x:translated(self.pos.x, self.pos.y)
+        return x:translated(cam_x, cam_y)
     else
-        return x + self.pos.x, y + self.pos.y
+        return x + cam_x, y + cam_y
     end
 end
 
 -- Convert a vector in world space to screen space.
 -- ("World space" means the coordinate space of the camera's target)
 function Camera:toScreen(x, y)
+    local cam_x, cam_y = self:getPosition()
     if isinstance(x, leaf.Vector) then
-        return x:translated(-self.pos.x, -self.pos.y)
+        return x:translated(-cam_x, -cam_y)
     else
-        return x - self.pos.x, y - self.pos.y
+        return x - cam_x, y - cam_y
     end
 end
-
--- Return a leaf.Rect representing the viewable world coordinates
-function Camera:getClip()
-    return leaf.Rect(self.pos.x, self.pos.y, 
-                self.pos.x + love.graphics.getWidth(), 
-                self.pos.y + love.graphics.getHeight())
-end
-

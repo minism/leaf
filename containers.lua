@@ -162,6 +162,13 @@ function Set:iter()
     return pairs(self.set)
 end
 
+function Set:isEmpty()
+    for k, v in pairs(self.set) do
+        return false
+    end
+    return true
+end
+
 
 -- Stack --
 
@@ -251,13 +258,11 @@ end
 
 function Queue:iter()
     local i = self.front
-    local count = 0
     return function()
         if self[i] then
             local val = self[i]
             i = i + 1
-            count = count + 1
-            return count, val
+            return i, val
         else
             return nil
         end

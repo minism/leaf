@@ -25,23 +25,21 @@
 
 --]]
 
--- Constructor shortcut
+-- Constructor shortcut to allocate and initialize an object
 local function constructor(class, ...)
-    return class:new(...)
+    local obj = class:new()
+    if obj.init then obj:init(...) end
+    return obj
 end
 
 -- Setup base object
-leaf.Object = {}
-local Object = leaf.Object
-setmetatable(Object, { __call = constructor })
+local Object = { __call = constructor }
 Object.__index = Object
-Object.__call = constructor
 
--- Creates, initializes, and returns a new object
+-- Allocate a new object
 function Object:new(...)
     local obj = {}
     setmetatable(obj, self)
-    if obj.init then obj:init(...) end
     return obj
 end
 
@@ -55,13 +53,10 @@ function Object:extend()
             class[k] = v
         end
     end
-    class.__index = class
     class.__call = constructor
+    class.__index = class
     return class
 end
 
--- Check if an object is an instance of its prototype
-function isinstance(obj, class)
-    return getmetatable(obj) == class
-end
-
+-- Namespace exports
+leaf.Object = Object

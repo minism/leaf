@@ -152,8 +152,7 @@ function Vector:set(a, b)
 end
 
 function Vector:reset()
-    self.x = 0
-    self.y = 0
+    self.x, self.y = 0, 0
     return self
 end
 

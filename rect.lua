@@ -112,6 +112,11 @@ function Rect:__tostring()
            "," .. self.right .. "," .. self.bottom .. ")"
 end
 
+function Rect:reset()
+    self.left, self.top, self.right, self.bottom = 0, 0, 0, 0
+    return self
+end
+
 function Rect:copy()
     return Rect(self.left, self.top, self.right, self.bottom)
 end
@@ -188,11 +193,20 @@ function Rect:moveTo(x, y)
     return self
 end
 
+-- Set the coordinates of the rect to another rect, or to a list of coordinates
 function Rect:set(left, top, bottom, right)
-    self.left = left
-    self.top = top
-    self.bottom = bottom
-    self.right = right
+    if (isinstance(left, Rect)) then
+        local r = left
+        self.left = r.left
+        self.top = r.top
+        self.bottom = r.bottom
+        self.right = r.right
+    else
+        self.left = left
+        self.top = top
+        self.bottom = bottom
+        self.right = right
+    end
 end
 
 -- Scale the rectangle from its center instead of the corner

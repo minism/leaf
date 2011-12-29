@@ -28,6 +28,7 @@
 require 'math'
 require 'leaf.object'
 require 'leaf.containers'
+require 'leaf.utils'
 
 -- Timer class --
 
@@ -99,43 +100,39 @@ function Interpolator:update(dt)
         -- Finished, call with max value
         self.callback(1)
     end
-
     -- Calculate alpha
     local alpha = 1.0 - self.timeleft / self.duration
     self.callback(alpha)
-
 end
 
-    
+
 -- Time singleton (main usage) --
 
 leaf.time = {}
 local time = leaf.time
+time.timers = {}
 
-time.timers = leaf.List()
-
---- Update all timers, this MUST be called from main loop!
+-- Update time system -- this must be called from main loop
 function time.update(dt)
-    for timer in time.timers:iter() do
+    -- Clean up dead timers
+    remove_if(time.timers, function(t) return t.dead end)
+    -- Update alive timers
+    for i, timer in ipairs(time.timers) do
         timer:update(dt)
-        if timer.dead then
-            -- Remove timer from list
-            time.timers:remove(timer)
-        end
     end
 end
 
 -- Create, register and return a new timer
 function time.timer(duration, callback, loops, start)
-    local timer = Timer:new(duration, callback, loops, start)
-    time.timers:insert(timer)
+    local timer = Timer(duration, callback, loops, start)
+    table.insert(time.timers, timer)
     return timer
 end
 
 -- Create, register and return a new interpolator
 function time.interp(duration, callback, loops, start)
-    local interp = Interpolator:new(duration, callback, loops, start)
-    time.timers:insert(interp)
+    local interp = Interpolator(duration, callback, loops, start)
+    table.insert(time.timers, interp)
     return interp
 end
 
