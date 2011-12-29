@@ -27,8 +27,7 @@
 
 require 'strong'          
 
-leaf.fs = {}
-local fs = leaf.fs
+local fs = {}
 
 -- Generic loading function that does a deep search through `path`, calling
 -- `file_callback` on each file and storing it in a map, and also calling
@@ -95,3 +94,7 @@ function fs.loadShaders(path, callback)
     end
     return recursiveYieldingLoader(path, subshader, callback)
 end
+
+
+-- Namespace exports
+leaf.fs = fs

@@ -37,8 +37,7 @@ function _ListNode:init(value)
     self.next = nil
 end
 
-leaf.List = leaf.Object:extend()
-local List = leaf.List
+local List = leaf.Object:extend()
 
 function List:init()
     self.head = nil
@@ -132,8 +131,7 @@ end
 
 
 -- Set --
-leaf.Set = leaf.Object:extend()
-local Set = leaf.Set
+local Set = leaf.Object:extend()
 
 function Set:init(...)
     self.set = {}
@@ -171,10 +169,8 @@ end
 
 
 -- Stack --
-
 -- No iter required, as we can use ipairs() effectively
-leaf.Stack = leaf.Object:extend()
-local Stack = leaf.Stack
+local Stack = leaf.Object:extend()
 
 function Stack:init(max)
     self.max = max or -1
@@ -207,8 +203,7 @@ end
     
 
 -- Queue --
-leaf.Queue = leaf.Object:extend('Queue')
-local Queue = leaf.Queue
+local Queue = leaf.Object:extend('Queue')
 
 function Queue:init(max)
     self.max = max or -1
@@ -272,3 +267,10 @@ end
 function Queue:isEmpty()
     return self.back <= self.front
 end
+
+
+-- Namespace exports
+leaf.List = List
+leaf.Set = Set
+leaf.Stack = Stack
+leaf.Queue = Queue

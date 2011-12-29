@@ -38,8 +38,7 @@ end
 
 
 -- Console -- 
-leaf.Console = leaf.Object:extend()
-local Console = leaf.Console
+local Console = leaf.Object:extend()
 
 function Console:init(max)
     local max = max or 500
@@ -69,3 +68,6 @@ function Console:draw()
     end
 end
 
+
+-- Namespace exports
+leaf.Console = Console

@@ -27,8 +27,7 @@
 
 require 'leaf.containers'
 
-leaf.Group = {}
-local Group = leaf.Group
+local Group = {}
 
 function Group.new()
     -- Allocate
@@ -59,3 +58,7 @@ end
 setmetatable(Group, {
     __call = Group.new
 })
+
+
+-- Namespace exports
+leaf.Group = Group

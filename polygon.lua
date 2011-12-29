@@ -27,8 +27,7 @@
 
 require 'leaf.object'
 
-leaf.Polygon = leaf.Object:extend()
-local Polygon = leaf.Polygon
+local Polygon = leaf.Object:extend()
 
 -- Convex polygon --
 function Polygon:init(...)
@@ -48,3 +47,7 @@ function Polygon:init(...)
         end
     end
 end
+
+
+-- Namespace exports
+leaf.Polygon = Polygon

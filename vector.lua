@@ -28,8 +28,7 @@
 require 'leaf.object'
 require 'math'
 
-leaf.Vector = leaf.Object:extend()
-local Vector = leaf.Vector
+local Vector = leaf.Object:extend()
 
 function Vector:init(x, y)
     self.x = x or 0
@@ -156,5 +155,6 @@ function Vector:reset()
     return self
 end
 
--- Convenience naming
-leaf.Point = leaf.Vector
+-- Namespace exports
+leaf.Vector = Vector
+leaf.Point = Vector

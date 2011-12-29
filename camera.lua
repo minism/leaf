@@ -29,8 +29,7 @@ require 'leaf.object'
 require 'leaf.vector'
 require 'leaf.rect'
 
-leaf.Camera = leaf.Object:extend()
-local Camera = leaf.Camera
+local Camera = leaf.Object:extend()
 
 function Camera:init(track_func)
     if track_func then self:track(track_func) end
@@ -96,3 +95,7 @@ function Camera:toScreen(x, y)
         return x - cam_x, y - cam_y
     end
 end
+
+
+-- Namespace exports
+leaf.Camera = Camera

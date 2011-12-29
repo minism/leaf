@@ -27,8 +27,7 @@
 
 require 'leaf.object'
 
-leaf.Rect = leaf.Object:extend()
-local Rect = leaf.Rect
+local Rect = leaf.Object:extend()
 
 function Rect:init(v1, v2, v3, v4)
     -- If only two values passed, assume right and bottom
@@ -221,3 +220,7 @@ function Rect:centerScale(amt)
     self.bottom = t + self:h() * (1 + amt) / 2
     return self
 end
+
+
+-- Namespace exports
+leaf.Rect = Rect

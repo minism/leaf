@@ -31,9 +31,7 @@ require 'leaf.containers'
 require 'leaf.utils'
 
 -- Timer class --
-
-leaf.Timer = leaf.Object:extend()
-local Timer = leaf.Timer
+local Timer = leaf.Object:extend()
 
 function Timer:init(duration, callback, loops, start)
     self.duration = duration
@@ -92,8 +90,7 @@ end
 -- Interpolators which execute every tick, passing
 -- a 0-1 alpha argument to its bound callback
 
-leaf.Interpolator = Timer:extend()
-local Interpolator = leaf.Interpolator
+local Interpolator = Timer:extend()
 
 function Interpolator:update(dt)
     if Timer.update(self) then
@@ -107,9 +104,7 @@ end
 
 
 -- Time singleton (main usage) --
-
-leaf.time = {}
-local time = leaf.time
+local time = {}
 time.timers = {}
 
 -- Update time system -- this must be called from main loop
@@ -145,3 +140,7 @@ end
 function time.every(duration, callback)
     return time.timer(duration, callback, 0, true)
 end
+
+
+-- Namespace exports
+leaf.time = time
