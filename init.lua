@@ -29,14 +29,15 @@
 leaf = {}
 
 -- Modules
-require 'leaf.object'
-require 'leaf.containers'
-require 'leaf.group'
-require 'leaf.fs'
-require 'leaf.vector'
-require 'leaf.rect'
-require 'leaf.polygon'
-require 'leaf.time'
 require 'leaf.camera'
 require 'leaf.console'
+require 'leaf.containers'
+require 'leaf.context'
+require 'leaf.fs'
+require 'leaf.group'
+require 'leaf.object'
+require 'leaf.polygon'
+require 'leaf.rect'
+require 'leaf.time'
 require 'leaf.utils'
+require 'leaf.vector'

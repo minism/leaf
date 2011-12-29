@@ -172,10 +172,6 @@ end
 -- No iter required, as we can use ipairs() effectively
 local Stack = leaf.Object:extend()
 
-function Stack:init(max)
-    self.max = max or -1
-end
-
 function Stack:clear()
     local n = #self
     for i = 1, n do
@@ -184,9 +180,7 @@ function Stack:clear()
 end
 
 function Stack:push(obj)
-    if self.max >= 0 and #self < self.max then
-       table.insert(self, obj)
-    end
+   table.insert(self, obj)
 end
 
 function Stack:pop()
