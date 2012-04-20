@@ -65,7 +65,7 @@ function app.bindLove()
     end
     -- Draw callback is ran in reverse order
     love.draw = function (...)
-        for i = #app.cstack, 1 do
+        for i = #app.cstack, 1, -1 do
             local context = app.cstack[i]
             if context.draw and type(context.draw == 'function') then context.draw(...) end
         end

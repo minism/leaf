@@ -27,6 +27,12 @@
 
 require 'leaf.object'
 require 'leaf.containers'
+require 'leaf.context'
+
+-- Default settings --
+local HISTORY = 2000
+local PADDING = 10
+
 
 -- Console message --
 local Message = leaf.Object:extend()
@@ -38,12 +44,11 @@ end
 
 
 -- Console -- 
-local Console = leaf.Object:extend()
+Console = leaf.Context:extend()
 
-function Console:init(max)
-    local max = max or 500
+function Console:init()
     self.font = love.graphics.newFont(10)
-    self.queue = leaf.Queue(max)
+    self.queue = leaf.Queue(HISTORY)
 end
 
 function Console:write(data)
@@ -51,7 +56,7 @@ function Console:write(data)
     self.queue:push(message)
 end
 
-function Console:err(data)
+function Console:error(data)
     local message = Message(data, true)
     self.queue:push(message)
 end
@@ -59,15 +64,13 @@ end
 function Console:draw()
     local width = love.graphics.getWidth()
     local height = love.graphics.getHeight()
-    local padding = 10
+    love.graphics.setColor(0, 0, 0, 128)
+    love.graphics.rectangle('fill', 0, 0, width, height)
+    love.graphics.setColor(255, 255, 255)
     love.graphics.setFont(self.font)
     for i, message in self.queue:iter() do
-        love.graphics.printf(message.data, padding, 
-                             height - padding - i * self.font:getHeight(), 
+        love.graphics.printf(message.data, PADDING, 
+                             height - PADDING - i * self.font:getHeight(), 
                              width, 'left')
     end
 end
-
-
--- Namespace exports
-leaf.Console = Console

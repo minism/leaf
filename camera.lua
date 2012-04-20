@@ -44,7 +44,10 @@ end
 
 -- Return the upper left corner of the camera in world space
 function Camera:getPosition()
-    local tx, ty = self.track_func() 
+    local tx, ty = 0, 0
+    if self.track_func then
+        tx, ty = self.track_func()
+    end
     return tx - love.graphics.getWidth() / 2 / self.scale, ty - love.graphics.getHeight() / 2 / self.scale
 end
 
