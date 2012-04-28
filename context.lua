@@ -31,42 +31,45 @@ require 'leaf.containers'
 -- Context class, represents a running state with input/update/draw
 local Context = leaf.Object:extend()
 
+-- App class, for containing contexts and wrapping love callbacks
+local App = leaf.Object:extend()
 
--- Global app object, for usage in main.lua
-local app = { cstack = leaf.Stack() }
+function App:init()
+    self.cstack = leaf.Stack()
+end
 
 -- Push a context to the front of the screen
-function app.pushContext(context)
-    app.cstack:push(context)
+function App:pushContext(context)
+    self.cstack:push(context)
 end
 
 -- Pop the outermost context
-function app.popContext()
-    app.cstack:pop()
+function App:popContext()
+    self.cstack:pop()
 end
 
 -- Swaps the outermost context for a new one, or pushes if the stack is empty
-function app.swapContext(context)
-    if app.cstack:isEmpty() then
-        app.cstack:push(context)
+function App:swapContext(context)
+    if self.cstack:isEmpty() then
+        self.cstack:push(context)
     else
-        app.cstack[#app.cstack] = context
+        self.cstack[#app.cstack] = context
     end
 end
 
--- Bind all love callbacks to context stack
-function app.bindLove()
+-- Reroute all love callbacks to this app
+function App:bind()
     for i, func in ipairs{'update', 'keypressed', 'mousepressed', 'mousereleased', 'quit'} do
         love[func] = function (...)
-            for i, context in ipairs(app.cstack) do
+            for i, context in ipairs(self.cstack) do
                 if context[func] and type(context[func] == 'function') then context[func](...) end
             end
         end
     end
     -- Draw callback is ran in reverse order
     love.draw = function (...)
-        for i = #app.cstack, 1, -1 do
-            local context = app.cstack[i]
+        for i = #self.cstack, 1, -1 do
+            local context = self.cstack[i]
             if context.draw and type(context.draw == 'function') then context.draw(...) end
         end
     end
@@ -75,4 +78,4 @@ end
 
 -- Namespace exports
 leaf.Context = Context
-leaf.app = app
+leaf.App = App

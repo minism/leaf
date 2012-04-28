@@ -103,12 +103,16 @@ function Interpolator:update(dt)
 end
 
 
--- Time singleton (main usage) --
-local time = {}
-time.timers = {}
+-- Time controller class
+local Time = leaf.Object:extend()
+
+function Time:init()
+    self.timers = {}
+end
+
 
 -- Update time system -- this must be called from main loop
-function time.update(dt)
+function Time:update(dt)
     -- Clean up dead timers
     remove_if(time.timers, function(t) return t.dead end)
     -- Update alive timers
@@ -118,29 +122,29 @@ function time.update(dt)
 end
 
 -- Create, register and return a new timer
-function time.timer(duration, callback, loops, start)
+function Time:timer(duration, callback, loops, start)
     local timer = Timer(duration, callback, loops, start)
-    table.insert(time.timers, timer)
+    table.insert(self.timers, timer)
     return timer
 end
 
 -- Create, register and return a new interpolator
-function time.interp(duration, callback, loops, start)
+function Time:interp(duration, callback, loops, start)
     local interp = Interpolator(duration, callback, loops, start)
-    table.insert(time.timers, interp)
+    table.insert(self.timers, interp)
     return interp
 end
 
 -- Schedule `callback` after `duration` milliseconds
-function time.after(duration, callback)
-    return time.timer(duration, callback, 1, true)
+function Time:after(duration, callback, loops)
+    return self:timer(duration, callback, 1, true)
 end
 
 -- Schedule `callback` every `duration` milliseconds
-function time.every(duration, callback)
-    return time.timer(duration, callback, 0, true)
+function Time:every(duration, callback, loops)
+    return self:timer(duration, callback, loops or 0, true)
 end
 
 
 -- Namespace exports
-leaf.time = time
+leaf.Time = Time
