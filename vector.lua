@@ -130,8 +130,9 @@ function Vector:translated(x, y)
 end
 
 function Vector:rotate(theta)
-    self.x = self.x * math.cos(theta) - self.y * math.sin(theta)
-    self.y = self.x * math.sin(theta) + self.y * math.cos(theta)
+    local x = self.x * math.cos(theta) - self.y * math.sin(theta)
+    local y = self.x * math.sin(theta) + self.y * math.cos(theta)
+    self.x, self.y = x, y
     return self
 end
 

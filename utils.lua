@@ -26,7 +26,7 @@
 --]]
 
 -- Remove objects from a lua table, defragmenting the table in the process.
-function remove_if(t, cull)
+function leaf.remove_if(t, cull)
     -- Defrag
     local size = #t
     local free = 1
@@ -42,7 +42,19 @@ function remove_if(t, cull)
     end
 end
 
+
+-- Update a table with values from another table
+function leaf.update_table(t1, t2)
+    for k, v in pairs(t2) do
+        if v then
+            t1[k] = v
+        end
+    end
+    return t1
+end
+
+
 -- Check if an object is an instance of its prototype
-function isinstance(obj, class)
+function leaf.isinstance(obj, class)
     return getmetatable(obj) == class
 end

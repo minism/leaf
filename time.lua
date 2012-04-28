@@ -114,7 +114,7 @@ end
 -- Update time system -- this must be called from main loop
 function Time:update(dt)
     -- Clean up dead timers
-    remove_if(time.timers, function(t) return t.dead end)
+    leaf.remove_if(time.timers, function(t) return t.dead end)
     -- Update alive timers
     for i, timer in ipairs(time.timers) do
         timer:update(dt)
