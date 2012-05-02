@@ -68,7 +68,7 @@ function Console:draw()
     love.graphics.rectangle('fill', 0, 0, width, height)
     love.graphics.setColor(255, 255, 255)
     love.graphics.setFont(self.font)
-    for i, message in self.queue:iter() do
+    for i, message in self.queue:iter_reverse() do
         love.graphics.printf(message.data, PADDING, 
                              height - PADDING - i * self.font:getHeight(), 
                              width, 'left')

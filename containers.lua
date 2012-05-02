@@ -246,10 +246,27 @@ function Queue:peekBack()
 end
 
 function Queue:iter()
-    local i = self.front
+    local i = 0
+    local ptr = self.front
     return function()
-        if self[i] then
-            local val = self[i]
+        if self[ptr] then
+            local val = self[ptr]
+            ptr = ptr + 1
+            i = i + 1
+            return i, val
+        else
+            return nil
+        end
+    end
+end
+
+function Queue:iter_reverse()
+    local i = 0
+    local ptr = self.back - 1
+    return function()
+        if self[ptr] then
+            local val = self[ptr]
+            ptr = ptr - 1
             i = i + 1
             return i, val
         else
