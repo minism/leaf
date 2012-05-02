@@ -65,22 +65,15 @@ end
 
 -- Sets up matrix to center the active target
 -- If a Z parameter is specified, it is considered a depth factor relative to the target
--- e.g., if z = 2.0, objects will appear 2x as close as the target
-function Camera:push(z)  
+-- e.g., if z = 2.0, objects in worldspace will appear 2x as close as the target
+function Camera:applyMatrix(z)  
     -- Default depth to 1, which is the plane of the target
     local z = z or 1
     local x, y = self:getWorldPosition()
 
-    -- Use builtin matrix
-    love.graphics.push()
-
     -- Center on target, offset depth by Z, scale by camera scale
     love.graphics.scale(self.scale, self.scale)
     love.graphics.translate(z * -x, z * -y)
-end
-
-function Camera:pop()
-    love.graphics.pop()
 end
 
 -- Convert a vector in screen space to world space.
