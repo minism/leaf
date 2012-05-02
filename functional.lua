@@ -2,9 +2,9 @@
 
 #########################################################################
 #                                                                       #
-# utils.lua                                                             #
+# functional.lua                                                        #
 #                                                                       #
-# Lua utility functions                                                 #
+# Functional programming constructs                                     #
 #                                                                       #
 # Copyright 2011 Josh Bothun                                            #
 # joshbothun@gmail.com                                                  #

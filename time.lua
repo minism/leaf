@@ -28,7 +28,7 @@
 require 'math'
 require 'leaf.object'
 require 'leaf.containers'
-require 'leaf.utils'
+require 'leaf.functional'
 
 -- Timer class --
 local Timer = leaf.Object:extend()
@@ -114,9 +114,9 @@ end
 -- Update time system -- this must be called from main loop
 function Time:update(dt)
     -- Clean up dead timers
-    leaf.remove_if(time.timers, function(t) return t.dead end)
+    leaf.remove_if(self.timers, function(t) return t.dead end)
     -- Update alive timers
-    for i, timer in ipairs(time.timers) do
+    for i, timer in ipairs(self.timers) do
         timer:update(dt)
     end
 end
