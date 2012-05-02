@@ -52,8 +52,3 @@ function leaf.map2d(array, callback)
     end
 end
 
-
--- Check if an object is an instance of its prototype
-function leaf.isinstance(obj, class)
-    return getmetatable(obj) == class
-end

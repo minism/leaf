@@ -27,10 +27,15 @@
 
 require 'math'
 
-function snap_floor(value, step)
+function leaf.snap_floor(value, step)
     return math.floor(value / step) * step
 end
 
-function snap_ceil(value, step)
+function leaf.snap_ceil(value, step)
     return math.ceil(value / step) * step
+end
+
+-- Check if an object is an instance of its prototype
+function leaf.isinstance(obj, class)
+    return getmetatable(obj) == class
 end

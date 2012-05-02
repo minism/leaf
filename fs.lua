@@ -46,7 +46,7 @@ function recursiveYieldingLoader(root, file_callback, interp_callback)
                 key = key:gsub('%.[^.]*$', '')
                 map[key] = file_callback(fullpath)
                 if type(interp_callback) == 'function' then
-                    interp_callback(count / total)
+                    interp_callback(count / total, fullpath)
                 end
             elseif love.filesystem.isDirectory(fullpath) then
                 iter(fullpath, docount)
