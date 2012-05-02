@@ -39,3 +39,14 @@ end
 function leaf.isinstance(obj, class)
     return getmetatable(obj) == class
 end
+
+-- Return a list of quads for each frame of an image
+function build_quads(image, framewidth, frameheight)
+    local quads = {}
+    for i=0, math.floor(image:getWidth() / framewidth) do
+        for j=0, math.floor(image:getHeight() / frameheight) do
+            table.insert(quads, love.graphics.newQuad(i * framewidth, j * frameheight, framewidth, frameheight, image:getWidth(), image:getHeight()))
+        end
+    end
+    return quads
+end
