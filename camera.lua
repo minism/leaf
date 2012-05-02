@@ -31,10 +31,11 @@ require 'leaf.rect'
 
 local Camera = leaf.Object:extend()
 
-function Camera:init(track_func)
-    if track_func then self:track(track_func) end
-    self.scale = 1
+function Camera:init(prop)
+    local prop = prop or {}
     self.x, self.y = 0, 0
+    self.scale = prop.scale or 1
+    if prop.track_func then self:track(prop.track_func) end
 end
 
 -- Set the cameras tracking function
@@ -86,14 +87,14 @@ end
 -- ("World space" means the coordinate space of the camera's target)
 function Camera:toWorld(x, y)
     local cam_x, cam_y = self:getWorldPosition()
-    return x + cam_x, y + cam_y
+    return x / self.scale + cam_x, y / self.scale + cam_y
 end
 
 -- Convert a vector in world space to screen space.
 -- ("World space" means the coordinate space of the camera's target)
 function Camera:toScreen(x, y)
     local cam_x, cam_y = self:getWorldPosition()
-    return x - cam_x, y - cam_y
+    return x * self.scale - cam_x, y * self.scale - cam_y
 end
 
 
