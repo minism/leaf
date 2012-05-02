@@ -34,16 +34,8 @@ function Polygon:init(...)
     if type(arg[1]) == 'table' then
         self:init(unpack(arg[1]))
     else
-        local x = nil
         for i, point in ipairs(arg) do
-            if not x then
-                x = point
-            else
-                -- Store vertex pair
-                table.insert(self, x)
-                table.insert(self, point)
-                x = nil
-            end
+            table.insert(self, point)
         end
     end
 end
