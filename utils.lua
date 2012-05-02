@@ -2,9 +2,9 @@
 
 #########################################################################
 #                                                                       #
-# functional.lua                                                        #
+# utils.lua                                                             #
 #                                                                       #
-# Functional programming constructs                                     #
+# Utility functions                                                     #
 #                                                                       #
 # Copyright 2011 Josh Bothun                                            #
 # joshbothun@gmail.com                                                  #
@@ -21,39 +21,16 @@
 # GNU General Public License <http://www.gnu.org/licenses/> for         #
 # more details.                                                         #
 #                                                                       #
-#########################################################################
+#########################################################################                                             
 
 --]]
 
--- Remove objects from a lua table, defragmenting the table in the process.
-function leaf.remove_if(t, cull)
-    -- Defrag
-    local size = #t
-    local free = 1
-    for i = 1, #t do
-        if not cull(t[i]) then
-            t[free] = t[i]
-            free = free + 1
-        end
-    end
-    -- Nil remainder
-    for i = free, size do
-        t[i] = nil
-    end
+require 'math'
+
+function snap_floor(value, step)
+    return math.floor(value / step) * step
 end
 
-
---- Map for 2D arrays
-function leaf.map2d(array, callback)
-    for i=1, #array do
-        for j=1, #array[i] do
-            callback(array[i][j])
-        end
-    end
-end
-
-
--- Check if an object is an instance of its prototype
-function leaf.isinstance(obj, class)
-    return getmetatable(obj) == class
+function snap_ceil(value, step)
+    return math.ceil(value / step) * step
 end

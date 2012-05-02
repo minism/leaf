@@ -34,6 +34,7 @@ local Camera = leaf.Object:extend()
 function Camera:init(track_func)
     if track_func then self:track(track_func) end
     self.scale = 1
+    self.x, self.y = 0, 0
 end
 
 -- Set the cameras tracking function
@@ -42,9 +43,13 @@ function Camera:track(track_func)
     self.track_func = track_func
 end
 
+function Camera:untrack()
+    self.track_func = nil
+end
+
 -- Return the upper left corner of the camera in world space
-function Camera:getPosition()
-    local tx, ty = 0, 0
+function Camera:getWorldPosition()
+    local tx, ty = self.x, self.y
     if self.track_func then
         tx, ty = self.track_func()
     end
@@ -53,7 +58,7 @@ end
 
 -- Return a leaf.Rect representing the viewable rectangle in world space
 function Camera:getClip()
-    local x, y = self:getPosition()
+    local x, y = self:getWorldPosition()
     return leaf.Rect(x, y, x + love.graphics.getWidth(), y + love.graphics.getHeight())
 end
 
@@ -63,7 +68,7 @@ end
 function Camera:push(z)  
     -- Default depth to 1, which is the plane of the target
     local z = z or 1
-    local x, y = self:getPosition()
+    local x, y = self:getWorldPosition()
 
     -- Use builtin matrix
     love.graphics.push()
@@ -80,23 +85,15 @@ end
 -- Convert a vector in screen space to world space.
 -- ("World space" means the coordinate space of the camera's target)
 function Camera:toWorld(x, y)
-    local cam_x, cam_y = self:getPosition()
-    if isinstance(x, leaf.Vector) then
-        return x:translated(cam_x, cam_y)
-    else
-        return x + cam_x, y + cam_y
-    end
+    local cam_x, cam_y = self:getWorldPosition()
+    return x + cam_x, y + cam_y
 end
 
 -- Convert a vector in world space to screen space.
 -- ("World space" means the coordinate space of the camera's target)
 function Camera:toScreen(x, y)
-    local cam_x, cam_y = self:getPosition()
-    if isinstance(x, leaf.Vector) then
-        return x:translated(-cam_x, -cam_y)
-    else
-        return x - cam_x, y - cam_y
-    end
+    local cam_x, cam_y = self:getWorldPosition()
+    return x - cam_x, y - cam_y
 end
 
 
