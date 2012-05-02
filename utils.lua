@@ -29,7 +29,7 @@
 -- Update a table with values from another table
 function leaf.update_table(t1, t2)
     for k, v in pairs(t2) do
-        if v then
+        if v ~= nil then
             t1[k] = v
         end
     end
