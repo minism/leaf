@@ -52,3 +52,15 @@ function leaf.map2d(array, callback)
     end
 end
 
+
+--- Like underscore pick
+function leaf.pick(table, keys)
+    result = {}
+    for i, key in ipairs(keys) do
+        if table[key] ~= nil then
+            result[key] = table[key]
+        end
+    end
+    return result
+end
+
