@@ -30,6 +30,7 @@ leaf = {}
 
 -- Modules
 require 'leaf.camera'
+require 'leaf.color'
 require 'leaf.console'
 require 'leaf.containers'
 require 'leaf.context'
