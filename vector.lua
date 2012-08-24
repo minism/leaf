@@ -4,7 +4,7 @@
 #                                                                       #
 # vector.lua                                                            #
 #                                                                       #
-# 2D vector class                                                       #
+# 2D vector pure function                                               #
 #                                                                       #
 # Copyright 2011 Josh Bothun                                            #
 # joshbothun@gmail.com                                                  #
@@ -25,137 +25,49 @@
 
 --]]
 
-require 'leaf.object'
 require 'math'
+require 'leaf.object'
 
-local Vector = leaf.Object:extend()
+local sin, cos, sqrt = math.sin, math.cos, math.sqrt
 
-function Vector:init(x, y)
-    self.x = x or 0
-    self.y = y or 0
+local vector = {}
+
+
+function vector.translate(x, y, dx, dy)
+    return x + dx, y + dy
 end
 
-local function assert_vecs(a, b)
-    assert(isinstance(a, Vector) and isinstance(b, Vector), "Operands must be Vectors.")
+function vector.rotate(x, y, theta)
+    local rx = x * math.cos(theta) - y * math.sin(theta)
+    local ry = x * math.sin(theta) + y * math.cos(theta)
+    return rx, ry
 end
 
-function Vector.__add(a, b)
-    assert_vecs(a, b)
-    return Vector(a.x + b.x, a.y + b.y)
+function vector.scale(x, y, s)
+    return x * s, y * s
 end
 
-function Vector.__sub(a, b)
-    assert_vecs(a, b)
-    return Vector(a.x - b.x, a.y - b.y)
+function vector.length(x, y)
+    return math.sqrt(x * x + y * y)
 end
 
-function Vector.__mul(a, b)
-    if type(a) == 'number' then
-        assert(isinstance(b, Vector), "Operands must be numbers or vectors.")
-        return Vector(b.x * a, b.y * a)
-    elseif type(b) == 'number' then
-        assert(isinstance(a, Vector), "Operands must be numbers or vectors.")
-        return Vector(a.x * b, a.y * b)
+function vector.normalize(x, y)
+    local len = vector.length(x, y)
+    if len > 0 then
+        return x / len, y / len
+    end
+    return x, y
+end
+
+function vector.perpendicular(x, y, right)
+    if not right
+        return -y, x
     else
-        assert_vecs(a, b)
-        return Vector(a.x * b.x, a.y * b.y)
+        return y, -x
     end
 end
 
-function Vector.__div(a, b)
-    assert(isinstance(a, Vector) and type(b) == 'number', "Can only divide a Vector by a number.")
-    return Vector(a.x / b, a.y / b)
-end
-
-function Vector.__eq(a, b)
-    assert_vecs(a, b)
-    return a.x == b.x and a.y == b.y
-end
-
-function Vector.__lt(a, b)
-    assert_vecs(a, b)
-    return a:len() < b:len()
-end
-
-function Vector.__lte(a, b)
-    assert_vecs(a, b)
-    return a:len() <= b:len()
-end
-
-function Vector.__gt(a, b)
-    assert_vecs(a, b)
-    return a:len() > b:len()
-end
-
-function Vector.__gte(a, b)
-    assert_vecs(a, b)
-    return a:len() >= b:len()
-end
-
-function Vector:__tostring()
-    return "(" .. self.x .. "," .. self.y .. ")"
-end
-
-function Vector:copy()
-    return Vector(self.x, self.y)
-end
-
-function Vector:unpack()
-    return self.x, self.y
-end
-
-function Vector:len()
-    return math.sqrt(self.x * self.x, self.y * self.y)
-end
-
-function Vector:normalize()
-    local len = self:len()
-    self.x = self.x / len
-    self.y = self.y / len
-    return self
-end
-
-function Vector:normalized()
-    return self:copy():normalize()
-end
-
-function Vector:translate(x, y)
-    self.x = self.x + x
-    self.y = self.y + y
-    return self
-end
-
-function Vector:translated(x, y)
-    return self:copy():translate(x, y)
-end
-
-function Vector:rotate(theta)
-    local x = self.x * math.cos(theta) - self.y * math.sin(theta)
-    local y = self.x * math.sin(theta) + self.y * math.cos(theta)
-    self.x, self.y = x, y
-    return self
-end
-
-function Vector:rotated(theta)
-    return self:copy():rotate(theta)
-end
-
-function Vector:set(a, b)
-    if isinstance(a, Vector) then
-        self.x = a.x
-        self.y = a.y
-    else
-        self.x = a
-        self.y = b
-    end
-    return self
-end
-
-function Vector:reset()
-    self.x, self.y = 0, 0
-    return self
-end
 
 -- Namespace exports
-leaf.Vector = Vector
-leaf.Point = Vector
+leaf.vector = vector
+leaf.vec = vector

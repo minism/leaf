@@ -44,7 +44,7 @@ end
 
 
 -- Console -- 
-Console = leaf.Context:extend()
+local Console = leaf.Context:extend()
 
 function Console:init()
     self.font = love.graphics.newFont(10)
@@ -74,3 +74,6 @@ function Console:draw()
                              width, 'left')
     end
 end
+
+-- Namespace exports
+leaf.Console = Console
