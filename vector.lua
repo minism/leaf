@@ -33,6 +33,15 @@ local sin, cos, sqrt = math.sin, math.cos, math.sqrt
 local vector = {}
 
 
+-- Convenience function, not for OO operations
+function vector.new(x, y)
+    local x = x or 0
+    local y = y or 0
+    return {x=x, y=y}
+end
+
+vector.__call = vector.new
+
 function vector.translate(x, y, dx, dy)
     return x + dx, y + dy
 end
@@ -60,7 +69,7 @@ function vector.normalize(x, y)
 end
 
 function vector.perpendicular(x, y, right)
-    if not right
+    if not right then
         return -y, x
     else
         return y, -x
@@ -70,4 +79,3 @@ end
 
 -- Namespace exports
 leaf.vector = vector
-leaf.vec = vector
