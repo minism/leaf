@@ -44,8 +44,8 @@ function Object:new(...)
 end
 
 -- Creates and returns a new class
-function Object:extend()
-    local class = {}
+function Object:extend(t)
+    local class = t or {}
     setmetatable(class, self)
     -- Inherit metamethods
     for k, v in pairs(self) do
