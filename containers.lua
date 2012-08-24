@@ -197,7 +197,7 @@ end
     
 
 -- Queue --
-local Queue = leaf.Object:extend('Queue')
+local Queue = leaf.Object:extend()
 
 function Queue:init(max)
     self.max = max or -1
