@@ -27,9 +27,11 @@
 
 require 'leaf.object'
 require 'leaf.vector'
-require 'leaf.rect'
 
 local Camera = leaf.Object:extend()
+
+Camera.screenWidth = love.graphics.getWidth
+Camera.screenHeight = love.graphics.getHeight
 
 function Camera:init(prop)
     local prop = prop or {}
@@ -54,13 +56,13 @@ function Camera:getWorldPosition()
     if self.track_func then
         tx, ty = self.track_func()
     end
-    return tx - love.graphics.getWidth() / 2 / self.scale, ty - love.graphics.getHeight() / 2 / self.scale
+    return tx - self:screenWidth() / 2 / self.scale, ty - self:screenHeight() / 2 / self.scale
 end
 
--- Return a leaf.Rect representing the viewable rectangle in world space
-function Camera:getClip()
+-- Return a rect representing the viewable rectangle in world space
+function Camera:getClipRect()
     local x, y = self:getWorldPosition()
-    return leaf.Rect(x, y, x + love.graphics.getWidth(), y + love.graphics.getHeight())
+    return x, y, x + self:screenWidth() / self.scale, y + self:screenHeight()
 end
 
 -- Sets up matrix to center the active target
