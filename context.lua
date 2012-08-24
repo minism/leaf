@@ -62,7 +62,11 @@ function App:bind()
     for i, func in ipairs{'update', 'keypressed', 'mousepressed', 'mousereleased', 'quit', 'draw'} do
         love[func] = function (...)
             for i, context in ipairs(self.cstack) do
-                if context[func] and type(context[func] == 'function') then context[func](context, ...) end
+                if context[func] and type(context[func] == 'function') then 
+                    if context[func](context, ...) == true then
+                        break
+                    end
+                end
             end
         end
     end

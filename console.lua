@@ -25,6 +25,7 @@
 
 --]]
 
+require 'leaf.color'
 require 'leaf.object'
 require 'leaf.containers'
 require 'leaf.context'
@@ -37,9 +38,9 @@ local PADDING = 10
 -- Console message --
 local Message = leaf.Object:extend()
 
-function Message:init(data, err)
+function Message:init(data, level)
     self.data = data
-    self.err = err and true or false
+    self.level = level or 'info'
 end
 
 
@@ -49,6 +50,10 @@ local Console = leaf.Context:extend()
 function Console:init()
     self.font = love.graphics.newFont(10)
     self.queue = leaf.Queue(HISTORY)
+    self.color = leaf.ColorPalette {
+        info = {255, 255, 255},
+        error = {255, 0, 0},
+    }
 end
 
 function Console:write(data)
@@ -57,11 +62,20 @@ function Console:write(data)
 end
 
 function Console:error(data)
-    local message = Message(data, true)
+    local message = Message(data, 'error')
     self.queue:push(message)
 end
 
 function Console:draw()
+    self:drawInput()
+    self:drawLog()
+end
+
+function Console:drawInput()
+
+end
+
+function Console:drawLog()
     local width = love.graphics.getWidth()
     local height = love.graphics.getHeight()
     love.graphics.setColor(0, 0, 0, 128)
@@ -69,10 +83,14 @@ function Console:draw()
     love.graphics.setColor(255, 255, 255)
     love.graphics.setFont(self.font)
     for i, message in self.queue:iter_reverse() do
+        self.color[message.level]()
         love.graphics.printf(message.data, PADDING, 
                              height - PADDING - i * self.font:getHeight(), 
                              width, 'left')
     end
+end
+
+function Console:keypressed(key, unicode)
 end
 
 -- Namespace exports
