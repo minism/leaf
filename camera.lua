@@ -30,10 +30,11 @@ require 'leaf.vector'
 
 local Camera = leaf.Object:extend()
 
-Camera.screenWidth = love.graphics.getWidth
-Camera.screenHeight = love.graphics.getHeight
+
 
 function Camera:init(prop)
+    self.screenWidth = love.graphics.getWidth
+    self.screenHeight = love.graphics.getHeight
     local prop = prop or {}
     self.x, self.y = 0, 0
     self.scale = prop.scale or 1

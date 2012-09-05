@@ -26,7 +26,7 @@
 --]]
 
 
-local w, h, f, v, a = love.graphics.getMode()
+local w, h, f, v, a = love and love.graphics and love.graphics.getMode()
 local screen = {
     -- Represents the dimensions of the game screen (as opposed to resolution)
     width = w,
