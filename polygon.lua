@@ -25,19 +25,49 @@
 
 --]]
 
+require 'math'
+
 require 'leaf.object'
+require 'leaf.vector'
+
+local vector = leaf.vector
 
 local Polygon = leaf.Object:extend()
 
 -- Convex polygon --
 function Polygon:init(...)
     if type(arg[1]) == 'table' then
-        self:init(unpack(arg[1]))
-    else
-        for i, point in ipairs(arg) do
-            table.insert(self, point)
-        end
+        return self:init(unpack(arg[1]))
     end
+
+    -- Add initial points from args
+    for i=1, math.max(#arg, 6), 2 do
+        local x, y = arg[i], arg[i+1]
+        self:addPoint(x or 0, y or 0)
+        table.insert(self, point)
+    end
+end
+
+-- Add a new point to the polygon
+function Polygon:addPoint(x, y)
+    table.insert(self, x)
+    table.insert(self, y)
+end
+
+-- Remove a point from the polygon, defaults to last point
+function Polygon:removePoint(i)
+    local npoints = self:numPoints()
+    if npoints <= 3 then
+        return nil
+    end
+    local i = i or npoints
+    local x = table.remove(self, i * 2 - 1)
+    local y = table.remove(self, i * 2 - 1)
+    return x, y
+end
+
+function Polygon:numPoints()
+    return math.floor(#self / 2)
 end
 
 
