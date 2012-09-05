@@ -59,14 +59,14 @@ function Console:init()
     }
 end
 
-function Console:write(data)
-    local message = Message(data)
-    self.queue:push(message)
+function Console:write(...)
+    local text = table.concat(arg, " ")
+    self.queue:push(Message(text))
 end
 
-function Console:error(data)
-    local message = Message(data, 'error')
-    self.queue:push(message)
+function Console:error(...)
+    local text = table.concat(arg, " ")
+    self.queue:push(Message(text, 'error'))
 end
 
 function Console:draw()
