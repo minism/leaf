@@ -70,6 +70,92 @@ function Polygon:numPoints()
     return math.floor(#self / 2)
 end
 
+function Polygon:getPoint(i)
+    return self[i * 2 - 1], self[i * 2]
+end
+
+function Polygon:setPoint(i, x, y)
+    self[i * 2 - 1] = x
+    self[i * 2] = y
+end
+
+function Polygon:getPointTables()
+    local points = {}
+    for x, y in self:iterPoints() do
+        table.insert(points, vector(x, y))
+    end
+    return points
+end
+
+function Polygon:setPointTables(points)
+    for i, point in ipairs(points) do
+        self:setPoint(i, point.x, point.y)
+    end
+end
+
+function Polygon:iterPoints()
+    local i = 1
+    return function()
+        if i > self:numPoints() then
+            return nil
+        end
+        local tmp = i
+        i = i + 1
+        return self:getPoint(tmp)
+    end
+end
+
+-- Get the centroid of the polygon
+-- http://en.wikipedia.org/wiki/Centroid
+function Polygon:getCentroid()
+    local tx, ty = 0, 0
+    for x, y in self:iterPoints() do
+        tx = tx + x
+        ty = ty + y
+    end
+    local npoints = self:numPoints()
+    return tx / npoints, ty / npoints
+end
+
+
+-- Reorder the points such that the polygon is regular
+-- Note this function is expensive
+function Polygon:normalize()
+    local cx, cy = self:getCentroid()
+    local points = self:getPointTables()
+    table.sort(points, function(a, b)
+        return math.atan2(a.y - cy, a.x - cx) >
+               math.atan2(b.y - cy, b.x - cx)
+    end)
+    self:setPointTables(points)
+end
+
+
+-- Check if this polygon contains a point
+-- Ray casting theorem
+function Polygon:contains(mx, my)
+    local points = self:getPointTables()
+    local i, j = #points, #points
+    local oddNodes = false
+
+    for i=1, #points do
+        if ((points[i].y < my and points[j].y >= my
+                or points[j].y< my and points[i].y>=my) and (points[i].x<=mx
+                or points[j].x<=mx)) then
+                if (points[i].x+(my-points[i].y)/(points[j].y-points[i].y)*(points[j].x-points[i].x)<mx) then
+                        oddNodes = not oddNodes
+                end
+        end
+        j = i
+    end
+
+    return oddNodes
+end
+
+
+-- Check if the polygon intersects with another
+-- Separating axis theorem
+
 
 -- Namespace exports
 leaf.Polygon = Polygon
