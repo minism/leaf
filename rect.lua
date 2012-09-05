@@ -83,8 +83,8 @@ function rect.scale(left, top, right, bottom, sx, sy)
 end
 
 function rect.scaleCenter(...)
-    local w, h = rect.size(...)
     local left, top, right, bottom = rect.scale(...)
+    local w, h = right - left, bottom - top
     return rect.translate(left, top, right, bottom, -w / 2, -h /2)
 end
 
