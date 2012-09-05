@@ -34,9 +34,10 @@ local vector = {}
 
 
 function vector.new(x, y)
-    local x = x or 0
-    local y = y or 0
-    return {x=x, y=y}
+    return {
+        x = x or 0,
+        y = y or 0,
+    }
 end
 
 function vector.translate(x, y, dx, dy)
@@ -49,8 +50,9 @@ function vector.rotate(x, y, theta)
     return rx, ry
 end
 
-function vector.scale(x, y, s)
-    return x * s, y * s
+function vector.scale(x, y, sx, sy)
+    local sy = sy or sx
+    return x * sx, y * sy
 end
 
 function vector.length(x, y)
@@ -79,9 +81,8 @@ for k, v in pairs(vector) do
     vector[k] = function(a, b, ...)
         if type(a) == 'table' then
             return v(a.x, a.y, b, ...)
-        else
-            return v(a, b, ...)
         end
+        return v(a, b, ...)
     end
 end
 
@@ -89,6 +90,15 @@ end
 -- Must pass a table to unpack
 function vector.unpack(v)
     return v.x, v.y
+end
+
+
+-- Define in-place functions
+for _, key in ipairs({"translate", "rotate", "scale", "normalize"}) do
+    vector[key .. "_i"] = function(v, ...)
+        v.x, v.y = vector[key](v, ...)
+        return v
+    end
 end
 
 
