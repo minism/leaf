@@ -35,6 +35,10 @@ function leaf.snap_ceil(value, step)
     return math.ceil(value / step) * step
 end
 
+function leaf.constrain(value, min, max)
+    return math.max(math.min(value, max), min)
+end
+
 -- Check if an object is an instance of its prototype
 function leaf.isinstance(obj, class)
     return getmetatable(obj) == class
