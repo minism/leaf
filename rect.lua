@@ -25,202 +25,126 @@
                                                 
 --]]
 
+require 'math'
 require 'leaf.object'
+require 'leaf.vector'
 
-local Rect = leaf.Object:extend()
+local vector = leaf.vector
 
-function Rect:init(v1, v2, v3, v4)
+local rect = {}
+
+function rect.new(a, b, c, d)
     -- If only two values passed, assume right and bottom
-    if v3 == nil or v4 == nil then
-        self.left = 0
-        self.top = 0
-        self.right = v1 or 0
-        self.bottom = v2 or 0
-    else
-        self.left = v1 or 0
-        self.top = v2 or 0
-        self.right = v3 or 0
-        self.bottom = v4 or 0
+    if c == nil then
+        return rect.new(0, 0, a, b)
     end
+    return {
+        left = a or 0,
+        top = b or 0,
+        right = c or 0,
+        bottom = d or 0,
+    }
 end
 
--- Member alias behavior
+function rect.width(left, top, right, bottom)
+    return right - left
+end
 
-local aliases =
-{
-    x1 = 'left',
-    y1 = 'top',
-    x2 = 'right',
-    y2 = 'bottom',
-}
+function rect.height(left, top, right, bottom)
+    return bottom - top
+end
 
-function Rect:__index(key)
-    if aliases[key] ~= nil then
-        return self[aliases[key]]
-    else
-        return Rect[key]
+function rect.size(left, top, right, bottom)
+    return rect.width(left, top, right, bottom),
+           rect.height(left, top, right, bottom)
+end
+
+function rect.area(left, top, right, bottom)
+    return rect.width(left, top, right, bottom) *
+           rect.height(left, top, right, bottom)
+end
+
+-- Return the center coordinate of the rectangle
+function rect.center(left, top, right, bottom)
+    local w, h = rect.size(left, top, right, bottom)
+    return left + w / 2, top + h / 2
+end
+
+function rect.translate(left, top, right, bottom, x, y)
+    local left, top = vector.translate(left, top, x, y)
+    local right, bottom = vector.translate(right, bottom, x, y)
+    return left, top, right, bottom
+end
+
+function rect.scale(left, top, right, bottom, sx, sy)
+    local sy = sy or sx
+    local w, h = rect.size(left, top, right, bottom)
+    return left, top, left + w * sx, bottom + h * sy
+end
+
+function rect.scaleCenter(...)
+    local w, h = rect.size(...)
+    local left, top, right, bottom = rect.scale(...)
+    return rect.translate(left, top, right, bottom, -w / 2, -h /2)
+end
+
+-- Check if a rect contains a point
+function rect.contains(left, top, right, bottom, a, b)
+    if type(a) == 'table' then
+        -- Assume a is vector table
+        return rect.contains(left, top, right, bottom, a.x, a.y)
     end
+    return a >= left and a <= right and b >= top and b <= bottom
 end
 
-local function assert_rects(a, b)
-    assert(isinstance(a, Rect) and isinstance(b, Rect), "Operands must be Rects.")
+-- Check if rect intersects another rect
+local function axis_overlaps(head, tail, head2, tail2)
+    return head >= head2 and head <= tail2 or
+           tail >= head2 and tail <= tail2
 end
-
-function Rect.__mul(a, b)
-    if type(a) == 'number' then
-        assert(isinstance(b, Rect), "Operands must be numbers or Rects.")
-        return Rect(b.left, b.top, b.left + b:w() * a, b.top + b:h() * a)
-    else
-        assert(isinstance(a, Rect) and type(b) == 'number', "Operands must be numbers or Rects.")
-        return Rect(a.left, a.top, a.left + a:w() * b, a.top + a:h() * b)
+function rect.intersects(left, top, right, bottom, a, b, c, d)
+    if type(a) == 'table' then
+        -- Assume a is a rect table
+        return rect.intersects(left, top, right, bottom,
+                               a.left, a.top, a.right, a.bottom)
     end
+    return axis_overlaps(left, right, a, c) and axis_overlaps(top, bottom, b, d)
 end
 
-function Rect.__div(a, b)
-    assert(isinstance(a, Rect) and type(b) == 'number', "Can only divide a Rect by a number.")
-    return Rect(a.left / b, a.top / b, a.right / b, a.bottom / b)
-end
 
-function Rect.__eq(a, b)
-    assert_rects(a, b)
-    return a.left == b.left and a.top == b.top and a.right == b.right and a.bottom == b.bottom
-end
-
-function Rect.__lt(a, b)
-    assert_rects(a, b)
-    return a:area() < b:area()
-end
-
-function Rect.__lte(a, b)
-    assert_rects(a, b)
-    return a:area() <= b:area()
-end
-
-function Rect.__gt(a, b)
-    assert_rects(a, b)
-    return a:area() > b:area()
-end
-
-function Rect.__gte(a, b)
-    assert_rects(a, b)
-    return a:area() >= b:area()
-end
-
-function Rect:__tostring()
-    return "(" .. self.left .. "," .. self.top ..
-           "," .. self.right .. "," .. self.bottom .. ")"
-end
-
-function Rect:reset()
-    self.left, self.top, self.right, self.bottom = 0, 0, 0, 0
-    return self
-end
-
-function Rect:copy()
-    return Rect(self.left, self.top, self.right, self.bottom)
-end
-
-function Rect:unpack()
-    return self.left, self.top, self:w(), self:h()
-end
-
-function Rect:w()   return self.right - self.left   end
-function Rect:h()   return self.bottom - self.top   end
-Rect.width, Rect.height = Rect.w, Rect.h
-
-function Rect:area()
-    return self:w() * self:h()
-end
-
-function Rect:center()
-    return self.left + self:w() / 2, self.top + self:h() / 2
-end
-
--- Check if rect contains an object or a point
-function Rect:contains(arg1, arg2)
-    if arg2 == nil then
-        -- Assume arg1 is an object with x and y fields
-        assert(arg1.x ~= nil and arg1.y ~= nil, "Object being queried must contain 'x' and 'y' fields.")
-        return self:contains(arg1.x, arg1.y)
-    elseif  arg1 >= self.left and
-            arg1 <= self.right and
-            arg2 >= self.top and
-            arg2 <= self.bottom then 
-                return true     
-    end
-    return false
-end
-
--- Check if rect intersects with another rect
-function Rect:intersects(rect)
-    assert_rects(self, rect)
-    if rect.left >= self.left and rect.left <= self.right then
-        if rect.top >= self.top and rect.top <= self.bottom then
-            return true
-        elseif rect.bottom >= self.top and rect.bottom <= self.bottom then
-            return true
+-- Wrap all rect methods to accept either a table or flat args
+for k, v in pairs(rect) do
+    rect[k] = function(a, b, c, d, ...)
+        if type(a) == 'table' then
+            return v(a.left, a.top, a.right, a.bottom, b, c, d, ...)
         end
-    elseif rect.right >= self.left and rect.right >= self.right then
-        if rect.top >= self.top and rect.top <= self.bottom then
-            return true
-        elseif rect.bottom >= self.top and rect.bottom <= self.bottom then
-            return true
-        end
-    end
-    return false
-end
-
-function Rect:translate(x, y)
-    self.left = self.left + x
-    self.top = self.top + y
-    self.right = self.right + x
-    self.bottom = self.bottom + y
-    return self
-end
-
-function Rect:translated(x, y)
-    return self:copy():translate(x, y)
-end
-
-function Rect:moveTo(x, y)
-    local w = self:w()
-    local h = self:h()
-    self.left = x
-    self.top = y
-    self.right = x + w
-    self.bottom = y + h
-    return self
-end
-
--- Set the coordinates of the rect to another rect, or to a list of coordinates
-function Rect:set(left, top, bottom, right)
-    if (isinstance(left, Rect)) then
-        local r = left
-        self.left = r.left
-        self.top = r.top
-        self.bottom = r.bottom
-        self.right = r.right
-    else
-        self.left = left
-        self.top = top
-        self.bottom = bottom
-        self.right = right
+        return v(a, b, c, d, ...)
     end
 end
 
--- Scale the rectangle from its center instead of the corner
-function Rect:centerScale(amt)
-    local w = self:w()
-    local h = self:h()
-    local l = self.left
-    local t = self.top
-    self.left   = l + self:w() * (1 - amt) / 2
-    self.top    = t + self:h() * (1 - amt) / 2
-    self.right  = l + self:w() * (1 + amt) / 2
-    self.bottom = t + self:h() * (1 + amt) / 2
-    return self
+
+-- Must pass a table to unpack
+function rect.unpack(r)
+    return r.left, r.top, rect.width(r), rect.height(r)
 end
+
+
+-- Define in-place functions
+for _, key in ipairs({"translate", "scale", "scaleCenter"}) do
+    rect[key .. "_i"] = function(r, ...)
+        r.left, r.top, r.right, r.bottom = rect[key](r, ...)
+        return r
+    end
+end
+
+
+-- Call shortcut
+setmetatable(rect, {
+    __call = function(self, ...)
+        return rect.new(...)
+    end,
+})
 
 
 -- Namespace exports
-leaf.Rect = Rect
+leaf.rect = rect
