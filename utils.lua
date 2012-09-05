@@ -40,8 +40,9 @@ function leaf.isinstance(obj, class)
     return getmetatable(obj) == class
 end
 
+
 -- Return a list of quads for each frame of an image
-function build_quads(image, framewidth, frameheight)
+function leaf.build_quads(image, framewidth, frameheight)
     local quads = {}
     for j=0, math.floor(image:getHeight() / frameheight) - 1 do
         for i=0, math.floor(image:getWidth() / framewidth) - 1 do

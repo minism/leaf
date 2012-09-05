@@ -33,7 +33,7 @@ local fs = {}
 -- `file_callback` on each file and storing it in a map, and also calling
 -- `interp_callback` with a percentage of completion arg, for easy hooking.
 -- Finally, the function returns the constructed map
-function recursiveYieldingLoader(root, file_callback, interp_callback)
+local function recursiveYieldingLoader(root, file_callback, interp_callback)
     local map = {}
     local count, total = 0, 0
     function iter(path, docount)
