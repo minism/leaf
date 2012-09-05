@@ -29,7 +29,10 @@ require 'leaf.object'
 require 'leaf.containers'
 
 -- Context class, represents a running state with input/update/draw
-local Context = leaf.Object:extend()
+local Context = leaf.Object:extend {
+    -- Controls whether or not self is passed to love callbacks
+    call_self = true,
+}
 
 -- App class, for containing contexts and wrapping love callbacks
 local App = leaf.Object:extend()
@@ -62,9 +65,15 @@ function App:bind()
     for i, func in ipairs{'update', 'keypressed', 'mousepressed', 'mousereleased', 'quit', 'draw'} do
         love[func] = function (...)
             for i, context in ipairs(self.cstack) do
-                if context[func] and type(context[func] == 'function') then 
-                    if context[func](context, ...) == true then
-                        break
+                if type(context[func]) == 'function' then
+                    if context.call_self then
+                        if context[func](context, ...) == true then 
+                            break 
+                        end
+                    else
+                        if context[func](...) == true then
+                            break
+                        end
                     end
                 end
             end
