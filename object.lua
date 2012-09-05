@@ -25,38 +25,18 @@
 
 --]]
 
--- Constructor shortcut to allocate and initialize an object
-local function constructor(class, ...)
-    local obj = class:new()
+local function new(class, ...)
+    local obj = setmetatable({}, class)
     if obj.init then obj:init(...) end
     return obj
 end
-
--- Setup base object
-local Object = { __call = constructor }
-Object.__index = Object
-
--- Allocate a new object
-function Object:new(...)
-    local obj = {}
-    setmetatable(obj, self)
-    return obj
+local function extend(class, sub)
+    local sub = sub or {}
+    sub.__index = sub
+    sub.__call = new
+    return setmetatable(sub, class)
 end
+local Object = extend({}, {extend=extend})
 
--- Creates and returns a new class
-function Object:extend(t)
-    local class = t or {}
-    setmetatable(class, self)
-    -- Inherit metamethods
-    for k, v in pairs(self) do
-        if k:match('^__') then
-            class[k] = v
-        end
-    end
-    class.__call = constructor
-    class.__index = class
-    return class
-end
-
--- Namespace exports
+-- Export
 leaf.Object = Object
