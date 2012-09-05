@@ -4,7 +4,7 @@
 #                                                                       #
 # rect.lua                                                              #
 #                                                                       #
-# 2D Rectangle class                                                    #
+# 2D rectangle operations                                               #
 #                                                                       #
 # Copyright 2011 Josh Bothun                                            #
 # joshbothun@gmail.com                                                  #

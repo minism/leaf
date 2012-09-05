@@ -4,7 +4,7 @@
 #                                                                       #
 # vector.lua                                                            #
 #                                                                       #
-# 2D vector pure function                                               #
+# 2D vector operations                                                  #
 #                                                                       #
 # Copyright 2011 Josh Bothun                                            #
 # joshbothun@gmail.com                                                  #
