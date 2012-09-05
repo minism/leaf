@@ -200,7 +200,7 @@ end
 local Queue = leaf.Object:extend()
 
 function Queue:init(max)
-    self.max = max or -1
+    self.max = max or 0
     self.front = 0
     self.back = 0
 end
@@ -224,8 +224,8 @@ function Queue:push(val)
     self[self.back] = val
     self.back = self.back + 1
     -- Adjust front pointer if we overflowed
-    if self.max >= 0 and self:len() > self.max then
-        self.front = self.front + 1
+    if self.max > 0 and self:len() > self.max then
+        self:pop()
     end
 end
 
