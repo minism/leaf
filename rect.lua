@@ -79,7 +79,7 @@ end
 function rect.scale(left, top, right, bottom, sx, sy)
     local sy = sy or sx
     local w, h = rect.size(left, top, right, bottom)
-    return left, top, left + w * sx, bottom + h * sy
+    return left, top, left + w * sx, top + h * sy
 end
 
 function rect.scaleCenter(...)
