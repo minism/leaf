@@ -36,8 +36,8 @@ local constrain = leaf.constrain
 -- Color functions
 local color = {}
 
-function color.toRgb(h, s, l)
-    if s<=0 then return l,l,l end
+function color.toRgb(h, s, l, a)
+    if s<=0 then return l,l,l,a end
     h, s, l = h/256*6, s/255, l/255
     local c = (1-math.abs(2*l-1))*s
     local x = (1-math.abs(h%2-1))*c
@@ -48,10 +48,10 @@ function color.toRgb(h, s, l)
     elseif h < 4 then r,g,b = 0,x,c
     elseif h < 5 then r,g,b = x,0,c
     else              r,g,b = c,0,x
-    end return (r+m)*255,(g+m)*255,(b+m)*255
+    end return (r+m)*255,(g+m)*255,(b+m)*255,a
 end
 
-function color.toHsl(r, g, b)
+function color.toHsl(r, g, b, a)
     local r, g, b = r/255, g/255, b/255
     local min, max = math.min(r, g, b), math.max(r, g, b)
     local h, s, l = 0, 0, (max + min) / 2
@@ -69,40 +69,45 @@ function color.toHsl(r, g, b)
         end
     end
     h = h / 6
-    return h*255, s*255, l*255
+    return h*255, s*255, l*255, a
 end
 
-function color.shift(r, g, b, dh)
+function color.shift(r, g, b, a, delta)
+    if not delta then a, delta = delta, a end
     local h, s, l = color.toHsl(r, g, b)
-    return color.toRgb((h + dh) % 255, s, l)
+    return color.toRgb((h + delta) % 255, s, l, a)
 end
 
-function color.lighten(r, g, b, dl)
+function color.lighten(r, g, b, a, delta)
+    if not delta then a, delta = delta, a end
     local h, s, l = color.toHsl(r, g, b)
-    return color.toRgb(h, s, constrain(l + dl, 0, 255))
+    return color.toRgb(h, s, constrain(l + delta, 0, 255), a)
 end
 
-function color.saturate(r, g, b, ds)
+function color.saturate(r, g, b, a, delta)
+    if not delta then a, delta = delta, a end
     local h, s, l = color.toHsl(r, g, b)
-    return color.toRgb(h, constrain(s + ds, 0, 255), l)
+    return color.toRgb(h, constrain(s + delta, 0, 255), l, a)
 end
 
-function color.darken(r, g, b, dl)
-    return color.lighten(r, g, b, -dl)
+function color.darken(r, g, b, a, delta)
+    if not delta then a, delta = delta, a end
+    return color.lighten(r, g, b, a, -delta)
 end
 
-function color.desaturate(r, g, b, ds)
-    return color.saturate(r, g, b, -ds)
+function color.desaturate(r, g, b, a, delta)
+    if not delta then a, delta = delta, a end
+    return color.saturate(r, g, b, a, -delta)
 end
 
 
 -- Wrap all color methods to accept either a table or flat args
 for k, v in pairs(color) do
-    color[k] = function(a, b, c, ...)
+    color[k] = function(a, b, c, d, ...)
         if type(a) == 'table' then
-            return v(a[1], a[2], a[3], b, c, ...)
+            return v(a[1], a[2], a[3], a[4], b, c, d, ...)
         end
-        return v(a, b, c, ...)
+        return v(a, b, c, d, ...)
     end
 end
 
