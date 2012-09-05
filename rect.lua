@@ -82,10 +82,20 @@ function rect.scale(left, top, right, bottom, sx, sy)
     return left, top, left + w * sx, top + h * sy
 end
 
-function rect.scaleCenter(...)
-    local left, top, right, bottom = rect.scale(...)
-    local w, h = right - left, bottom - top
-    return rect.translate(left, top, right, bottom, -w / 2, -h /2)
+function rect.scaleCenter(left, top, right, bottom, sx, sy)
+    local nleft, ntop, nright, nbottom = rect.scale(left, top, right, bottom, sx, sy)
+    local dx, dy = nright - right, nbottom - bottom
+    return rect.translate(nleft, ntop, nright, nbottom, -dx / 2, -dy / 2)
+end
+
+-- Convert to an x, y, w, h rectangle
+function rect.toRel(left, top, right, bottom)
+    return left, top, rect.size(left, top, right, bottom)
+end
+
+-- Convert to a left, top, right, bottom rectangle
+function rect.toAbs(left, top, width, height)
+    return left, top, left + width, top + height
 end
 
 -- Check if a rect contains a point
@@ -125,7 +135,7 @@ end
 
 -- Must pass a table to unpack
 function rect.unpack(r)
-    return r.left, r.top, rect.width(r), rect.height(r)
+    return r.left, r.top, r.right, r.bottom
 end
 
 
