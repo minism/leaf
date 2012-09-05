@@ -33,14 +33,11 @@ local sin, cos, sqrt = math.sin, math.cos, math.sqrt
 local vector = {}
 
 
--- Convenience function, not for OO operations
 function vector.new(x, y)
     local x = x or 0
     local y = y or 0
     return {x=x, y=y}
 end
-
-vector.__call = vector.new
 
 function vector.translate(x, y, dx, dy)
     return x + dx, y + dy
@@ -76,6 +73,31 @@ function vector.perpendicular(x, y, right)
     end
 end
 
+
+-- Wrap all vector methods to accept either a table or flat args
+for k, v in pairs(vector) do
+    vector[k] = function(a, b, ...)
+        if type(a) == 'table' then
+            return v(a.x, a.y, b, ...)
+        else
+            return v(a, b, ...)
+        end
+    end
+end
+
+
+-- Must pass a table to unpack
+function vector.unpack(v)
+    return v.x, v.y
+end
+
+
+-- Call shortcut
+setmetatable(vector, {
+    __call = function(self, ...) 
+        return vector.new(...)
+    end,
+})
 
 -- Namespace exports
 leaf.vector = vector
