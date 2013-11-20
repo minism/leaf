@@ -25,8 +25,6 @@
 
 --]]                      
 
-require 'strong'          
-
 local fs = {}
 
 -- Generic loading function that does a deep search through `path`, calling
