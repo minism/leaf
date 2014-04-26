@@ -60,12 +60,12 @@ function Console:init()
 end
 
 function Console:write(...)
-    local text = table.concat(arg, " ")
+    local text = table.concat({...}, " ")
     self.queue:push(Message(text))
 end
 
 function Console:error(...)
-    local text = table.concat(arg, " ")
+    local text = table.concat({...}, " ")
     self.queue:push(Message(text, 'error'))
 end
 
