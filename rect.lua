@@ -110,7 +110,7 @@ end
 -- Check if rect intersects another rect
 local function axis_overlaps(head, tail, head2, tail2)
     return head >= head2 and head <= tail2 or
-           tail >= head2 and tail <= tail2
+           head2 >= head and head2 <= tail
 end
 function rect.intersects(left, top, right, bottom, a, b, c, d)
     if type(a) == 'table' then
